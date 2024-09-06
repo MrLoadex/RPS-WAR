@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Test</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bienvenido al Lobby</h1>
+    <input type="text" id="username" placeholder="Ingresa tu nombre de usuario">
+    <button onclick="login()">Login</button>
+    
+    <button onclick="createLobby()">Crear Lobby</button>
+    <input type="text" id="lobbyId" placeholder="ID del lobby">
+    <button onclick="joinLobby()">Unirse a Lobby</button>
+
+    <button onclick="sendMove('Rock')">Piedra</button>
+    <button onclick="sendMove('Paper')">Papel</button>
+    <button onclick="sendMove('Scissors')">Tijeras</button>
+
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <div id="messages"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/client.js"></script>
+</body>
+</html>
