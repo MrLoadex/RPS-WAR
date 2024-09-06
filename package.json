@@ -13,5 +13,6 @@
     "socket.io": "^4.7.5",
     "websocket": "^1.0.35"
   },
+  "devDependencies": {},
   "description": ""
 }

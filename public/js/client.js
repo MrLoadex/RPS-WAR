@@ -70,34 +70,36 @@ function displayMessage(message) {
     messagesDiv.appendChild(messageElement);
 }
 
+function update()
+{
+    // Limpiar el canvas
+    /* FOR OBJETOS EN PANTALLA (incluyendo el escenario)
+     objetoEnPantalla.update();
+     */
+}
 // Función para dibujar en el canvas dependiendo del movimiento
 function drawMoveOnCanvas(move) {
     context.clearRect(0, 0, canvas.width, canvas.height);  // Limpiar el canvas
     
+    let element;
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
 
     switch (move) {
         case 'Rock':  // Dibuja un círculo para "rock"
-            context.beginPath();
-            context.arc(centerX, centerY, 50, 0, Math.PI * 2);
-            context.fillStyle = 'gray';
-            context.fill();
+            element = new Rock(centerX, centerY, 100, 'blue', { x: 0, y: 0 }, context);
             break;
         case 'Paper':  // Dibuja un cuadrado para "paper"
-            context.fillStyle = 'blue';
-            context.fillRect(centerX - 50, centerY - 50, 100, 100);
+            element = new Paper(centerX, centerY, 100, 'red', { x: 0, y: 0 }, context);
             break;
         case 'Scissors':  // Dibuja un triángulo para "scissors"
-            context.beginPath();
-            context.moveTo(centerX, centerY - 50);
-            context.lineTo(centerX - 50, centerY + 50);
-            context.lineTo(centerX + 50, centerY + 50);
-            context.closePath();
-            context.fillStyle = 'red';
-            context.fill();
+            element = new Scissors(centerX, centerY, 100, 'grey', { x: 0, y: 0 }, context);
             break;
         default:
             console.error('Movimiento no reconocido:', move);
+    }
+
+    if (element) {
+        element.draw();
     }
 }
