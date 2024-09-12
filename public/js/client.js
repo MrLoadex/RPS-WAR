@@ -92,18 +92,16 @@ function drawMoveOnCanvas(move, team) {
     context.clearRect(0, 0, canvas.width, canvas.height);  // Limpiar el canvas
     
     let element;
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
 
     switch (move) {
-        case 'Rock':  // Dibuja un círculo para "rock"
-            element = new Rock(centerX, centerY, 50, 'blue', team);
+        case 'Rock':
+            element = new Rock(50, 'blue', team, context);
             break;
-        case 'Paper':  // Dibuja un cuadrado para "paper"
-            element = new Paper(centerX, centerY, 100, 'red', team);
+        case 'Paper':
+            element = new Paper(75, 'red', team, context);
             break;
-        case 'Scissors':  // Dibuja un triángulo para "scissors"
-            element = new Scissors(centerX, centerY, 100, 'grey', team);
+        case 'Scissors':
+            element = new Scissors(60, 'grey', team, context);
             break;
         default:
             console.error('Movimiento no reconocido:', move);
