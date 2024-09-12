@@ -4,6 +4,7 @@ const socket = io();
 let userId = null;
 let username = '';
 let currentLobbyId = null;
+let playerTeam = null;
 const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
 
@@ -26,7 +27,8 @@ function createLobby() {
 
 socket.on('lobbyCreated', (data) => {
     currentLobbyId = data.lobbyId;
-    displayMessage(`Lobby creado con ID: ${currentLobbyId}`);
+    playerTeam = data.team;
+    displayMessage(`Lobby creado con ID: ${currentLobbyId}. Eres el equipo ${playerTeam}`);
 });
 
 function joinLobby() {
@@ -39,20 +41,28 @@ function joinLobby() {
 socket.on('playerJoined', (data) => {
     currentLobbyId = data.lobbyId;
     displayMessage(`Te has unido al lobby: ${currentLobbyId}`);
-    displayMessage(`Jugadores en el lobby: ${data.players.join(', ')}`);
+    data.players.forEach(player => {
+        displayMessage(`Jugador: ${player.username}, Equipo: ${player.team}`);
+        if (player.username === username) {
+            playerTeam = player.team;
+        }
+    });
 });
 
 socket.on('startGame', (data) => {
     displayMessage(`¡El juego ha comenzado en el lobby ${data.lobbyId}!`);
+    data.players.forEach(player => {
+        displayMessage(`Jugador: ${player.username}, Equipo: ${player.team}`);
+    });
 });
 
 function sendMove(move) {
-    socket.emit('playerMove', { move });  // Enviar el movimiento al servidor
+    socket.emit('playerMove', { move });
 }
 
 socket.on('playerMove', (data) => {
-    displayMessage(`Jugador ${data.playerId} hizo un movimiento: ${data.move}`);
-    drawMoveOnCanvas(data.move);  // Llama a la función para dibujar en el canvas
+    displayMessage(`Jugador ${data.playerId} (${data.team}) hizo un movimiento: ${data.move}`);
+    drawMoveOnCanvas(data.move, data.team);
 });
 
 socket.on('lobbyError', (data) => {
@@ -78,22 +88,20 @@ function update()
      */
 }
 // Función para dibujar en el canvas dependiendo del movimiento
-function drawMoveOnCanvas(move) {
+function drawMoveOnCanvas(move, team) {
     context.clearRect(0, 0, canvas.width, canvas.height);  // Limpiar el canvas
     
     let element;
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
 
     switch (move) {
-        case 'Rock':  // Dibuja un círculo para "rock"
-            element = new Rock(centerX, centerY, 100, 'blue', { x: 0, y: 0 }, context);
+        case 'Rock':
+            element = new Rock(50, 'blue', team, context);
             break;
-        case 'Paper':  // Dibuja un cuadrado para "paper"
-            element = new Paper(centerX, centerY, 100, 'red', { x: 0, y: 0 }, context);
+        case 'Paper':
+            element = new Paper(75, 'red', team, context);
             break;
-        case 'Scissors':  // Dibuja un triángulo para "scissors"
-            element = new Scissors(centerX, centerY, 100, 'grey', { x: 0, y: 0 }, context);
+        case 'Scissors':
+            element = new Scissors(60, 'grey', team, context);
             break;
         default:
             console.error('Movimiento no reconocido:', move);

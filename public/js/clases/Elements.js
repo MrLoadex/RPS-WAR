@@ -1,12 +1,24 @@
 class Element {
-  constructor(x, y, radius, color, context) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
+  constructor(size, color, team, context) {
+    this.size = size;
     this.color = color;
-    this.alpha = 1;
+    this.team = team;
     this.context = context;
-    this.team; // Left or right
+    this.velocity = { x: 0, y: 0 };
+    this.friction = 0.98;
+    this.alpha = 1;
+    this.setInitialPosition();
+  }
+
+  setInitialPosition() {
+    const canvasWidth = this.context.canvas.width;
+    const canvasHeight = this.context.canvas.height;
+    this.y = canvasHeight / 2;
+    if (this.team === 'left') {
+      this.x = canvasWidth * 0.25;
+    } else {
+      this.x = canvasWidth * 0.75;
+    }
   }
 
   draw() {
@@ -16,54 +28,45 @@ class Element {
 
   update() {
     this.draw();
-    this.velocity.x *= friction;
-    this.velocity.y *= friction;
-    this.x = this.x + this.velocity.x;
-    this.y = this.y + this.velocity.y;
+    this.velocity.x *= this.friction;
+    this.velocity.y *= this.friction;
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
     this.alpha -= 0.01;
   }
 
-  move(){
-    // Mover horizontalmente dependiendo el equipo [L --> | R <--]
+  getDrawPosition() {
+    return { x: this.x, y: this.y };
   }
 }
 
 class Paper extends Element {
-  constructor(x, y, size, color) {
-    super(x, y, size, color);
-  }
-
   draw() {
-    context.fillStyle = this.color;
-    context.fillRect(this.x - 50, this.y - 50, 100, 100);
+    const { x, y } = this.getDrawPosition();
+    this.context.fillStyle = this.color;
+    this.context.fillRect(x - this.size / 2, y - this.size / 2, this.size, this.size);
   }
 }
 
 class Rock extends Element {
-  constructor(x, y, radius, color) {
-    super(x, y, radius, color);
-  }
-
   draw() {
-    context.beginPath();
-    context.arc(this.x, this.y, 50, 0, Math.PI * 2);
-    context.fillStyle = this.color;
-    context.fill();
+    const { x, y } = this.getDrawPosition();
+    this.context.beginPath();
+    this.context.arc(x, y, this.size / 2, 0, Math.PI * 2);
+    this.context.fillStyle = this.color;
+    this.context.fill();
   }
 }
 
 class Scissors extends Element {
-  constructor(x, y, size, color) {
-    super(x, y, size, color);
-  }
-
   draw() {
-    context.beginPath();
-    context.moveTo(this.x, this.y - 50);
-    context.lineTo(this.x - 50, this.y + 50);
-    context.lineTo(this.x + 50, this.y + 50);
-    context.closePath();
-    context.fillStyle = this.color;
-    context.fill();
-}
+    const { x, y } = this.getDrawPosition();
+    this.context.beginPath();
+    this.context.moveTo(x, y - this.size / 2);
+    this.context.lineTo(x - this.size / 2, y + this.size / 2);
+    this.context.lineTo(x + this.size / 2, y + this.size / 2);
+    this.context.closePath();
+    this.context.fillStyle = this.color;
+    this.context.fill();
+  }
 }
