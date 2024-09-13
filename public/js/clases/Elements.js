@@ -1,5 +1,5 @@
 class Element {
-  constructor(x, y, radius, color, context) {
+  constructor(x, y, radius, color, context, team) {
     this.x = x;
     this.y = y;
     this.radius = radius;
@@ -29,41 +29,61 @@ class Element {
 }
 
 class Paper extends Element {
-  constructor(x, y, size, color) {
-    super(x, y, size, color);
+  constructor(x, y, size, color, team) {
+    super(x, y, size, color, team);
   }
 
   draw() {
+    context.beginPath();
     context.fillStyle = this.color;
-    context.fillRect(this.x - 50, this.y - 50, 100, 100);
+    if (this.team == "left") {
+      //Si es el equipo izquierdo, dibujar en el lado izquierdo
+      context.fillRect(this.x - 50, this.y - 50, 100, 100);
+    }
+    else {
+      //Si es el equipo derecho, dibujar en el lado derecho
+      context.fillRect(this.x + 50, this.y - 50, 100, 100);
+    }
   }
 }
 
 class Rock extends Element {
-  constructor(x, y, radius, color) {
-    super(x, y, radius, color);
+  constructor(x, y, radius, color, team) {
+    super(x, y, radius, color, team);
   }
 
   draw() {
     context.beginPath();
-    context.arc(this.x, this.y, 50, 0, Math.PI * 2);
-    context.fillStyle = this.color;
-    context.fill();
+    //Si es el equipo izquierdo, dibujar en el lado izquierdo
+    if (this.team == "left") {
+      context.arc(this.x - 50, this.y, 50, 0, Math.PI * 2);
+    }
+    else {
+      //Si es el equipo derecho, dibujar en el lado derecho
+      context.arc(this.x + 50, this.y, 50, 0, Math.PI * 2);
+    }
   }
 }
 
 class Scissors extends Element {
-  constructor(x, y, size, color) {
-    super(x, y, size, color);
+  constructor(x, y, size, color, team) {
+    super(x, y, size, color, team);
   }
 
   draw() {
-    context.beginPath();
-    context.moveTo(this.x, this.y - 50);
-    context.lineTo(this.x - 50, this.y + 50);
-    context.lineTo(this.x + 50, this.y + 50);
-    context.closePath();
-    context.fillStyle = this.color;
-    context.fill();
-}
+    //Si es el equipo izquierdo, dibujar en el lado izquierdo
+    if (this.team == "left") {
+      context.moveTo(this.x, this.y - 50);
+      context.lineTo(this.x - 50, this.y + 50);
+      context.lineTo(this.x + 50, this.y + 50);
+      context.closePath();
+    }
+    else {
+      //Si es el equipo derecho, dibujar en el lado derecho
+      context.moveTo(this.x, this.y - 50);
+      context.lineTo(this.x - 50, this.y + 50);
+      context.lineTo(this.x + 50, this.y + 50);
+      context.closePath();
+    }
+  }
 }

@@ -29,28 +29,33 @@ io.on('connection', (socket) => {
     socket.on('createLobby', () => {
         const lobbyId = Math.floor(10000 + Math.random() * 90000).toString();
         lobbies[lobbyId] = {
-            players: [socket.id],
+            players: [{id: socket.id, team: 'left'}],
             gameStarted: false
         };
         users[socket.id].lobbyId = lobbyId;
+        users[socket.id].team = 'left';
         socket.join(lobbyId);
-        socket.emit('lobbyCreated', { lobbyId });
+        socket.emit('lobbyCreated', { lobbyId, team: 'left' });
     });
 
     // Unirse a un lobby existente
     socket.on('joinLobby', (lobbyId) => {
         if (lobbies[lobbyId] && lobbies[lobbyId].players.length < 2) {
-            lobbies[lobbyId].players.push(socket.id);
+            const team = lobbies[lobbyId].players[0].team === 'left' ? 'right' : 'left';
+            lobbies[lobbyId].players.push({id: socket.id, team});
             users[socket.id].lobbyId = lobbyId;
+            users[socket.id].team = team;
             socket.join(lobbyId);
 
-            // Enviar nombres de los jugadores en lugar de IDs
-            const playerNames = lobbies[lobbyId].players.map(id => users[id]?.username || 'Desconocido');
-            io.to(lobbyId).emit('playerJoined', { lobbyId, players: playerNames });
+            const playerInfo = lobbies[lobbyId].players.map(p => ({
+                username: users[p.id]?.username || 'Desconocido',
+                team: p.team
+            }));
+            io.to(lobbyId).emit('playerJoined', { lobbyId, players: playerInfo });
 
             if (lobbies[lobbyId].players.length === 2) {
                 lobbies[lobbyId].gameStarted = true;
-                io.to(lobbyId).emit('startGame', { lobbyId });
+                io.to(lobbyId).emit('startGame', { lobbyId, players: playerInfo });
             }
         } else {
             socket.emit('lobbyError', { message: 'Lobby no disponible o lleno' });
@@ -61,7 +66,11 @@ io.on('connection', (socket) => {
     socket.on('playerMove', ({ move }) => {
         const lobbyId = users[socket.id]?.lobbyId;
         if (lobbyId && lobbies[lobbyId].gameStarted) {
-            io.to(lobbyId).emit('playerMove', { playerId: users[socket.id].username, move });
+            io.to(lobbyId).emit('playerMove', { 
+                playerId: users[socket.id].username, 
+                move,
+                team: users[socket.id].team
+            });
             // Aquí implementarías la lógica del juego, verificando los movimientos y actualizando el estado del juego
         }
     });
