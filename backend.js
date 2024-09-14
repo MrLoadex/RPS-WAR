@@ -89,6 +89,14 @@ io.on('connection', (socket) => {
         delete users[socket.id];
         console.log(`Usuario desconectado: ${socket.id}`);
     });
+
+    // Manejo de elementos destruidos
+    socket.on('elementDestroyed', (data) => {
+        const lobbyId = users[socket.id]?.lobbyId;
+        if (lobbyId && lobbies[lobbyId].gameStarted) {
+            io.to(lobbyId).emit('elementDestroyed', data);
+        }
+    });
 });
 
 server.listen(port, () => {

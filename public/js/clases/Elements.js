@@ -1,12 +1,24 @@
-class Element{
-  constructor(x, y, radius, color, context, team) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
+class Element extends MonoBehaviour {
+  constructor(size, color, team, context) {
+    super();
+    this.size = size;
     this.color = color;
-    this.alpha = 1;
+    this.team = team;
     this.context = context;
-    this.team; // Left or right
+    this.speed = 2; // Velocidad de movimiento
+    this.setInitialPosition();
+    this.isDestroyed = false;
+  }
+
+  setInitialPosition() {
+    const canvasWidth = this.context.canvas.width;
+    const canvasHeight = this.context.canvas.height;
+    this.y = canvasHeight / 2;
+    if (this.team === 'left') {
+      this.x = canvasWidth * 0.25;
+    } else {
+      this.x = canvasWidth * 0.75;
+    }
   }
 
   draw() {
@@ -14,76 +26,87 @@ class Element{
     throw new Error("draw() debe ser implementado por las subclases");
   }
 
-  update() {
-    this.draw();
-    this.velocity.x *= friction;
-    this.velocity.y *= friction;
-    this.x = this.x + this.velocity.x;
-    this.y = this.y + this.velocity.y;
-    this.alpha -= 0.01;
+  move() {
+    if (this.team === 'left') {
+      this.x += this.speed;
+    } else {
+      this.x -= this.speed;
+    }
   }
 
-  move(){
-    // Mover horizontalmente dependiendo el equipo [L --> | R <--]
+  update() {
+    this.move(); // Llamamos a move() en cada update
+    this.draw(); // Dibujamos el elemento en su nueva posición
+  }
+
+  getDrawPosition() {
+    return { x: this.x, y: this.y };
+  }
+
+  checkCollision(otherElement) {
+    if (this.isDestroyed || otherElement.isDestroyed) return false;
+    const distance = Math.sqrt(
+      Math.pow(this.x - otherElement.x, 2) + Math.pow(this.y - otherElement.y, 2)
+    );
+    return distance < (this.size + otherElement.size) / 2;
+  }
+
+  handleCollision(otherElement) {
+    if (this.constructor === otherElement.constructor) {
+      this.destroy();
+      otherElement.destroy();
+    } else if (
+      (this instanceof Rock && otherElement instanceof Scissors) ||
+      (this instanceof Paper && otherElement instanceof Rock) ||
+      (this instanceof Scissors && otherElement instanceof Paper)
+    ) {
+      otherElement.destroy();
+    } else {
+      this.destroy();
+    }
+  }
+
+  destroy() {
+    this.isDestroyed = true;
+    // Emitir evento de destrucción
+    if (typeof socket !== 'undefined') {
+      socket.emit('elementDestroyed', {
+        type: this.constructor.name,
+        team: this.team,
+        x: this.x,
+        y: this.y
+      });
+    }
   }
 }
 
 class Paper extends Element {
-  constructor(x, y, size, color, team) {
-    super(x, y, size, color, team);
-  }
-
   draw() {
-    context.beginPath();
-    context.fillStyle = this.color;
-    if (this.team == "left") {
-      //Si es el equipo izquierdo, dibujar en el lado izquierdo
-      context.fillRect(this.x - 50, this.y - 50, 100, 100);
-    }
-    else {
-      //Si es el equipo derecho, dibujar en el lado derecho
-      context.fillRect(this.x + 50, this.y - 50, 100, 100);
-    }
+    const { x, y } = this.getDrawPosition();
+    this.context.fillStyle = this.color;
+    this.context.fillRect(x - this.size / 2, y - this.size / 2, this.size, this.size);
   }
 }
 
 class Rock extends Element {
-  constructor(x, y, radius, color, team) {
-    super(x, y, radius, color, team);
-  }
-
   draw() {
-    context.beginPath();
-    //Si es el equipo izquierdo, dibujar en el lado izquierdo
-    if (this.team == "left") {
-      context.arc(this.x - 50, this.y, 50, 0, Math.PI * 2);
-    }
-    else {
-      //Si es el equipo derecho, dibujar en el lado derecho
-      context.arc(this.x + 50, this.y, 50, 0, Math.PI * 2);
-    }
+    const { x, y } = this.getDrawPosition();
+    this.context.beginPath();
+    this.context.arc(x, y, this.size / 2, 0, Math.PI * 2);
+    this.context.fillStyle = this.color;
+    this.context.fill();
   }
 }
 
 class Scissors extends Element {
-  constructor(x, y, size, color, team) {
-    super(x, y, size, color, team);
-  }
-
   draw() {
-    //Si es el equipo izquierdo, dibujar en el lado izquierdo
-    if (this.team == "left") {
-      context.moveTo(this.x, this.y - 50);
-      context.lineTo(this.x - 50, this.y + 50);
-      context.lineTo(this.x + 50, this.y + 50);
-      context.closePath();
-    }
-    else {
-      //Si es el equipo derecho, dibujar en el lado derecho
-      context.moveTo(this.x, this.y - 50);
-      context.lineTo(this.x - 50, this.y + 50);
-      context.lineTo(this.x + 50, this.y + 50);
-      context.closePath();
-    }
+    const { x, y } = this.getDrawPosition();
+    this.context.beginPath();
+    this.context.moveTo(x, y - this.size / 2);
+    this.context.lineTo(x - this.size / 2, y + this.size / 2);
+    this.context.lineTo(x + this.size / 2, y + this.size / 2);
+    this.context.closePath();
+    this.context.fillStyle = this.color;
+    this.context.fill();
   }
 }
