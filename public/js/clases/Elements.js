@@ -1,4 +1,4 @@
-class Element {
+class Element{
   constructor(x, y, radius, color, context, team) {
     this.x = x;
     this.y = y;
