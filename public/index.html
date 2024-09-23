@@ -1,35 +1,40 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socket.IO Test</title>
+    <title>Login to Play</title>
     <style>
-        canvas {
-            border: 1px solid black;
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <h1>Bienvenido al Lobby</h1>
-    <input type="text" id="username" placeholder="Ingresa tu nombre de usuario">
-    <button onclick="login()">Login</button>
+    <h1>Rock, Paper, Scissors Game</h1>
     
-    <button onclick="createLobby()">Crear Lobby</button>
-    <input type="text" id="lobbyId" placeholder="ID del lobby">
-    <button onclick="joinLobby()">Unirse a Lobby</button>
+    <!-- Username Input -->
+    <input type="text" id="username" placeholder="Enter your username">
+    <button onclick="login()">Login</button>
 
-    <button onclick="sendMove('Rock')">Piedra</button>
-    <button onclick="sendMove('Paper')">Papel</button>
-    <button onclick="sendMove('Scissors')">Tijeras</button>
-
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <!-- Lobby Options (hidden initially) -->
+    <div id="lobbyOptions" style="display:none;">
+        <h2>Welcome, <span id="welcomeUser"></span>!</h2>
+        <button onclick="createLobby()">Create Lobby</button><br>
+        <input type="text" id="lobbyId" placeholder="Enter lobby ID to join">
+        <button onclick="joinLobby()">Join Lobby</button>
+    </div>
 
     <div id="messages"></div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="./js/clases/Elements.js"></script>
-    <script src="/js/client.js"></script>
+    <script src="/js/login.js"></script>
 </body>
 </html>
