@@ -3,7 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { pingInterval: 2000, pingTimeout: 5000 })
+const io = new Server(server, { pingInterval: 200, pingTimeout: 1000 })
 const port = 3000;
 
 app.use(express.static('public'));
@@ -18,7 +18,7 @@ const lobbies = {};  // Almacena los lobbys creados
 
 io.on('connection', (socket) => {
     console.log(`Usuario conectado: ${socket.id}`);
-    
+   
     // Manejo de login
     socket.on('login', (username) => {
         users[socket.id] = { username: username, lobbyId: null };
@@ -63,15 +63,23 @@ io.on('connection', (socket) => {
     });
 
     // Lógica del juego
-    socket.on('playerMove', ({ move }) => {
+    socket.on('playerMove', (data) => {
         const lobbyId = users[socket.id]?.lobbyId;
         if (lobbyId && lobbies[lobbyId].gameStarted) {
-            io.to(lobbyId).emit('playerMove', { 
-                playerId: users[socket.id].username, 
-                move,
-                team: users[socket.id].team
-            });
-            // Aquí implementarías la lógica del juego, verificando los movimientos y actualizando el estado del juego
+            const moveData = {
+                username: data.username,
+                team: data.team,
+                type: data.type,
+            };
+            io.to(lobbyId).emit('playerMove', moveData); 
+        }
+    });
+
+    // Manejo del evento 'gamePaused'
+    socket.on('gamePaused', (isPaused) => {
+        const lobbyId = users[socket.id]?.lobbyId;
+        if (lobbyId) {
+            io.to(lobbyId).emit('gamePaused', isPaused);
         }
     });
 

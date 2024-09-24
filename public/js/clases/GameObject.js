@@ -1,4 +1,4 @@
-class MonoBehaviour {
+class GameObject {
 
     start()
     {

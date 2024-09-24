@@ -1,8 +1,8 @@
-class Element extends MonoBehaviour {
-  constructor(size, color, team, context) {
+class Element extends GameObject {
+  constructor(team, context) {
     super();
-    this.size = size;
-    this.color = color;
+    this.size;
+    this.color;
     this.team = team;
     this.context = context;
     this.speed = 2; // Velocidad de movimiento
@@ -81,6 +81,12 @@ class Element extends MonoBehaviour {
 }
 
 class Paper extends Element {
+  constructor(team, context) {
+    super(team, context);
+    this.size = 50; // Tamaño específico para Paper
+    this.color = 'blue'; // Color específico para Paper
+  }
+
   draw() {
     const { x, y } = this.getDrawPosition();
     this.context.fillStyle = this.color;
@@ -89,6 +95,12 @@ class Paper extends Element {
 }
 
 class Rock extends Element {
+  constructor(team, context) {
+    super(team, context);
+    this.size = 50; // Tamaño específico para Rock
+    this.color = 'gray'; // Color específico para Rock
+  }
+
   draw() {
     const { x, y } = this.getDrawPosition();
     this.context.beginPath();
@@ -99,6 +111,12 @@ class Rock extends Element {
 }
 
 class Scissors extends Element {
+  constructor(team, context) {
+    super(team, context);
+    this.size = 50; // Tamaño específico para Scissors
+    this.color = 'red'; // Color específico para Scissors
+  }
+
   draw() {
     const { x, y } = this.getDrawPosition();
     this.context.beginPath();

@@ -1,69 +1,50 @@
 const socket = io();
 
+// Crear una instancia de Player
+const player = new Player();
+player.username = new URLSearchParams(window.location.search).get('username'); // Asignar el nombre de usuario al jugador
 // Variables globales
-let gameObjects = [];
-let userId = null;
-let username = '';
-let currentLobbyId = null;
-let playerTeam = null;
 const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
 
-function login() {
-    username = document.getElementById('username').value;
-    if (username) {
-        socket.emit('login', username);
-    }
-}
+const game = new Game(player.currentLobbyId, [player], context);
 
 socket.on('loginSuccess', (data) => {
-    userId = data.userId;
-    username = data.username;
-    displayMessage(`Bienvenido, ${username}!`);
+    player.userID = data.userId;
+    player.username = data.username;
+    displayMessage(`Bienvenido, ${player.username}!`);
 });
-
-function createLobby() {
-    socket.emit('createLobby');
-}
 
 socket.on('lobbyCreated', (data) => {
-    currentLobbyId = data.lobbyId;
-    playerTeam = data.team;
-    displayMessage(`Lobby creado con ID: ${currentLobbyId}. Eres el equipo ${playerTeam}`);
+    // Avisarle al jugador
+    player.currentLobbyId = data.lobbyId;
+    player.team = data.team;
+    displayMessage(`Lobby creado con ID: ${player.currentLobbyId}. Eres el equipo ${player.team}`);
 });
 
-function joinLobby() {
-    const lobbyId = document.getElementById('lobbyId').value;
-    if (lobbyId) {
-        socket.emit('joinLobby', lobbyId);
-    }
-}
-
 socket.on('playerJoined', (data) => {
-    currentLobbyId = data.lobbyId;
-    displayMessage(`Te has unido al lobby: ${currentLobbyId}`);
-    data.players.forEach(player => {
-        displayMessage(`Jugador: ${player.username}, Equipo: ${player.team}`);
-        if (player.username === username) {
-            playerTeam = player.team;
+    //Unir al player al lobby
+    player.currentLobbyId = data.lobbyId;
+    displayMessage(`Te has unido al lobby: ${player.currentLobbyId}`);
+    data.players.forEach(p => {
+        displayMessage(`Jugador: ${p.username}, Equipo: ${p.team}`);
+        if (p.username === player.username) {
+            player.team = p.team;
         }
     });
 });
 
 socket.on('startGame', (data) => {
     displayMessage(`¡El juego ha comenzado en el lobby ${data.lobbyId}!`);
-    data.players.forEach(player => {
-        displayMessage(`Jugador: ${player.username}, Equipo: ${player.team}`);
+    data.players.forEach(p => {
+        displayMessage(`Jugador: ${p.username}, Equipo: ${p.team}`);
     });
+    game.start(); // Iniciar el juego
 });
 
-function sendMove(move) {
-    socket.emit('playerMove', { move });
-}
-
-socket.on('playerMove', (data) => {
-    displayMessage(`Jugador ${data.playerId} (${data.team}) hizo un movimiento: ${data.move}`);
-    drawMoveOnCanvas(data.move, data.team);
+socket.on('playerMove', (moveData) => {
+    displayMessage(`Jugador ${moveData.username} (${moveData.team}) hizo un movimiento: ${moveData.type}`);
+    game.addMove(moveData); // Agregar el movimiento al juego
 });
 
 socket.on('lobbyError', (data) => {
@@ -76,7 +57,7 @@ socket.on('playerDisconnected', (data) => {
 
 socket.on('elementDestroyed', (data) => {
     // Encontrar y eliminar el elemento destruido de gameObjects
-    gameObjects = gameObjects.filter(obj => 
+    game.gameObjects = game.gameObjects.filter(obj => 
         !(obj.constructor.name === data.type && 
           obj.team === data.team && 
           Math.abs(obj.x - data.x) < 1 && 
@@ -84,6 +65,33 @@ socket.on('elementDestroyed', (data) => {
     );
     displayMessage(`Un ${data.type} del equipo ${data.team} ha sido destruido.`);
 });
+
+socket.on('gamePaused', (isPaused) => {
+    if (isPaused) {
+        console.log("Paremos perri!");
+        game.pause();
+    } else {
+        console.log("Continuemos perri!");
+        game.resume();
+    }
+});
+
+function login() {
+    player.login(player.username);
+}
+
+function createLobby() {
+    player.createLobby();
+}
+
+function joinLobby() {
+    const lobbyId = document.getElementById('lobbyId').value;
+    player.joinLobby(lobbyId);
+}
+
+function sendMove(strElement) {
+    player.sendMove(strElement);
+}
 
 function displayMessage(message) {
     const messagesDiv = document.getElementById('messages');
@@ -94,53 +102,33 @@ function displayMessage(message) {
 
 function update() {
     // Limpiar el canvas
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    
-    for(let i = 0; i < gameObjects.length; i++) {
-        gameObjects[i].update();
-    }
-
-    // Verificar colisiones
-    for(let i = 0; i < gameObjects.length; i++) {
-        for(let j = i + 1; j < gameObjects.length; j++) {
-            if (gameObjects[i].checkCollision(gameObjects[j])) {
-                gameObjects[i].handleCollision(gameObjects[j]);
-            }
-        }
-    }
-
-    // Eliminar objetos destruidos
-    gameObjects = gameObjects.filter(obj => !obj.isDestroyed);
+    context.clearRect(0, 0, canvas.width, canvas.height); 
+    game.update(); // Delegar la actualización a la instancia de Game
 }
+
+// Función para dibujar en el canvas dependiendo del movimiento
+function drawMoveOnCanvas(element) {
+    game.gameObjects.push(element);
+    element.draw();
+}
+
+// Función para crear un elemento a partir de los datos recibidos
+function createElementFromData(data) {
+    return game.createElement(data);
+}
+
+login();
+// Detectar cuando la pestaña se pone en segundo plano o vuelve al primer plano
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        socket.emit('gamePaused', true);
+        console.log("PAUSA!");
+    } else {
+        socket.emit('gamePaused', false);
+        console.log("PLAY!");
+    }
+});
 
 // Iniciar el bucle de actualización a aproximadamente 30 FPS
 const FPS = 30;
 setInterval(update, 1000 / FPS);
-
-// Función para dibujar en el canvas dependiendo del movimiento
-function drawMoveOnCanvas(move, team) {
-    context.clearRect(0, 0, canvas.width, canvas.height);  // Limpiar el canvas
-    
-    let element;
-
-    switch (move) {
-        case 'Rock':
-            element = new Rock(50, 'blue', team, context);
-            gameObjects.push(element);
-            break;
-        case 'Paper':
-            element = new Paper(75, 'red', team, context);
-            gameObjects.push(element);
-            break;
-        case 'Scissors':
-            element = new Scissors(60, 'grey', team, context);
-            gameObjects.push(element);
-            break;
-        default:
-            console.error('Movimiento no reconocido:', move);
-    }
-
-    if (element) {
-        element.draw();
-    }
-}

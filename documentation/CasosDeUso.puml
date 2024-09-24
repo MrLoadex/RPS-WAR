@@ -1,0 +1,30 @@
+@startuml
+
+actor Usuario
+actor Jugador
+actor Servidor
+
+Usuario --> (Login)
+Usuario --> (Crear Lobby)
+Usuario --> (Unirse a Lobby)
+
+Jugador --> (Enviar Movimiento)
+Jugador --> (Recibir Movimiento)
+Jugador --> (Desconectarse)
+
+Servidor --> (Manejar Login)
+Servidor --> (Manejar Creación de Lobby)
+Servidor --> (Manejar Unión a Lobby)
+Servidor --> (Manejar Movimiento de Jugador)
+Servidor --> (Manejar Desconexión)
+Servidor --> (Manejar Destrucción de Elemento)
+
+(Login) .> (Manejar Login) : <<include>>
+(Crear Lobby) .> (Manejar Creación de Lobby) : <<include>>
+(Unirse a Lobby) .> (Manejar Unión a Lobby) : <<include>>
+(Enviar Movimiento) .> (Manejar Movimiento de Jugador) : <<include>>
+(Desconectarse) .> (Manejar Desconexión) : <<include>>
+(Recibir Movimiento) .> (Manejar Movimiento de Jugador) : <<include>>
+(Manejar Destrucción de Elemento) <. (Manejar Movimiento de Jugador) : <<include>>
+
+@enduml

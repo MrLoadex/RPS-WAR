@@ -14,23 +14,13 @@
 <body>
     <h1>Bienvenido al Lobby</h1>
     <input type="text" id="username" placeholder="Ingresa tu nombre de usuario">
-    <button onclick="login()">Login</button>
-    
-    <button onclick="createLobby()">Crear Lobby</button>
-    <input type="text" id="lobbyId" placeholder="ID del lobby">
-    <button onclick="joinLobby()">Unirse a Lobby</button>
+    <button onclick="redirectToGame()">Login</button>
 
-    <button onclick="sendMove('Rock')">Piedra</button>
-    <button onclick="sendMove('Paper')">Papel</button>
-    <button onclick="sendMove('Scissors')">Tijeras</button>
-
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-
-    <div id="messages"></div>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/clases/MonoBehaviour.js"></script>
-    <script src="./js/clases/Elements.js"></script>
-    <script src="/js/client.js"></script>
+    <script>
+        function redirectToGame() {
+            const username = document.getElementById('username').value;
+            window.location.href = `game.html?username=${username}`;
+        }
+    </script>
 </body>
 </html>

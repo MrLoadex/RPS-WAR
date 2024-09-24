@@ -1,0 +1,88 @@
+@startuml
+
+!define RECTANGLE class
+
+RECTANGLE MonoBehaviour {
+    +start()
+    +update()
+}
+
+RECTANGLE Element extends MonoBehaviour {
+    -size: int
+    -color: string
+    -team: string
+    -context: CanvasRenderingContext2D
+    -speed: int
+    -isDestroyed: boolean
+    +setInitialPosition()
+    +draw()
+    +move()
+    +update()
+    +getDrawPosition()
+    +checkCollision(otherElement: Element): boolean
+    +handleCollision(otherElement: Element)
+    +destroy()
+}
+
+Element <|-- Paper
+Element <|-- Rock
+Element <|-- Scissors
+
+RECTANGLE Paper {
+    +draw()
+}
+
+RECTANGLE Rock {
+    +draw()
+}
+
+RECTANGLE Scissors {
+    +draw()
+}
+
+RECTANGLE Client {
+    -socket: Socket
+    -gameObjects: Element[]
+    -userId: string
+    -username: string
+    -currentLobbyId: string
+    -playerTeam: string
+    -canvas: HTMLCanvasElement
+    -context: CanvasRenderingContext2D
+    +login()
+    +createLobby()
+    +joinLobby()
+    +sendMove(move: string)
+    +displayMessage(message: string)
+    +update()
+    +drawMoveOnCanvas(move: string, team: string)
+}
+
+RECTANGLE Server {
+    -users: Map<string, User>
+    -lobbies: Map<string, Lobby>
+    +onConnection(socket: Socket)
+    +onLogin(socket: Socket, username: string)
+    +onCreateLobby(socket: Socket)
+    +onJoinLobby(socket: Socket, lobbyId: string)
+    +onPlayerMove(socket: Socket, move: string)
+    +onDisconnect(socket: Socket)
+    +onElementDestroyed(socket: Socket, data: any)
+}
+
+RECTANGLE User {
+    -username: string
+    -lobbyId: string
+    -team: string
+}
+
+RECTANGLE Lobby {
+    -players: User[]
+    -gameStarted: boolean
+}
+
+Client --> Element
+Server --> User
+Server --> Lobby
+
+@enduml
