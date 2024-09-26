@@ -31,8 +31,7 @@ class Player {
         };
         socket.emit('playerMove', data);
     }
-    
-    
+
     disconnect() {
         socket.emit('disconnect');
     }

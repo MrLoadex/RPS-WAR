@@ -8,10 +8,7 @@ class Game {
     }
 
     start() {
-        // Inicializar el juego
-        this.players.forEach(player => {
-        });
-        this.update();
+        
     }
 
     createElement(data) {
@@ -28,11 +25,13 @@ class Game {
     }
 
     update() {
-
+        //Pause
         if (this.isPaused)
         {
             return;
         }
+        // Dibujar todos los objetos
+        this.gameObjects.forEach(obj => obj.draw());
         // Actualizar y dibujar todos los objetos del juego
         this.gameObjects.forEach(obj => obj.update());
 

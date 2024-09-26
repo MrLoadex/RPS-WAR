@@ -1,9 +1,11 @@
 const socket = io();
 
-// Crear una instancia de Player
+const urlParams = new URLSearchParams(window.location.search);
 const player = new Player();
-player.username = new URLSearchParams(window.location.search).get('username'); // Asignar el nombre de usuario al jugador
-// Variables globales
+player.username = urlParams.get('username');
+const lobbyId = urlParams.get('lobbyId');
+
+// Crear una instancia de Player
 const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
 
@@ -81,12 +83,11 @@ function login() {
 }
 
 function createLobby() {
-    player.createLobby();
+    socket.emit('createLobby');
 }
 
 function joinLobby() {
-    const lobbyId = document.getElementById('lobbyId').value;
-    player.joinLobby(lobbyId);
+    socket.emit('joinLobby', lobbyId);
 }
 
 function sendMove(strElement) {
@@ -103,6 +104,7 @@ function displayMessage(message) {
 function update() {
     // Limpiar el canvas
     context.clearRect(0, 0, canvas.width, canvas.height); 
+    // Dibujar fondo
     game.update(); // Delegar la actualización a la instancia de Game
 }
 
@@ -117,17 +119,13 @@ function createElementFromData(data) {
     return game.createElement(data);
 }
 
-login();
-// Detectar cuando la pestaña se pone en segundo plano o vuelve al primer plano
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        socket.emit('gamePaused', true);
-        console.log("PAUSA!");
-    } else {
-        socket.emit('gamePaused', false);
-        console.log("PLAY!");
-    }
-});
+// Inicialización
+socket.emit('login', player.username);
+if (lobbyId) {
+    joinLobby();
+} else {
+    createLobby();
+}
 
 // Iniciar el bucle de actualización a aproximadamente 30 FPS
 const FPS = 30;

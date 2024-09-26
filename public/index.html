@@ -13,14 +13,17 @@
 </head>
 <body>
     <h1>Bienvenido al Lobby</h1>
-    <input type="text" id="username" placeholder="Ingresa tu nombre de usuario">
-    <button onclick="redirectToGame()">Login</button>
+    <div>
+        <input type="text" id="username" placeholder="Ingresa tu nombre de usuario">
+        <button onclick="checkUsername()">🔁 Verificar Usuario</button>
+    </div>
+    <div>
+        <input type="text" id="lobbyId" placeholder="ID del lobby">
+        <button onclick="checkUsernameAndJoinLobby()" disabled>Unirse</button>
+    </div>
+    <button onclick="checkUsernameAndCreateLobby()" disabled>Crear Lobby</button>
 
-    <script>
-        function redirectToGame() {
-            const username = document.getElementById('username').value;
-            window.location.href = `game.html?username=${username}`;
-        }
-    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
 </body>
 </html>

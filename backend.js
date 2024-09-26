@@ -105,6 +105,12 @@ io.on('connection', (socket) => {
             io.to(lobbyId).emit('elementDestroyed', data);
         }
     });
+
+    // Escuchar evento checkUsername con el parámetro username
+    socket.on('checkUsername', (username) => {
+        const isAvailable = !Object.values(users).some(user => user.username === username);
+        socket.emit('usernameViability', isAvailable);
+    });
 });
 
 server.listen(port, () => {

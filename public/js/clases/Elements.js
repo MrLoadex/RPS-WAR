@@ -36,7 +36,6 @@ class Element extends GameObject {
 
   update() {
     this.move(); // Llamamos a move() en cada update
-    this.draw(); // Dibujamos el elemento en su nueva posición
   }
 
   getDrawPosition() {
