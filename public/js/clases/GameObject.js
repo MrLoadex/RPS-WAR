@@ -1,6 +1,5 @@
 class GameObject {
     constructor() {
-        this.priorityRender = 1;
     }
 
     start()
@@ -18,5 +17,9 @@ class GameObject {
         throw new Error("draw() debe ser implementado por las subclases");
     }
 
+    checkCollision()
+    {
+         throw new Error("checkCollision() debe ser implementado por las subclases");
+    }
    
 }

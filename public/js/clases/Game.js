@@ -8,7 +8,6 @@ class Game {
     }
 
     start() {
-        
     }
 
     createElement(data) {
@@ -60,6 +59,19 @@ class Game {
               Math.abs(obj.x - obj.x) < 1 && 
               Math.abs(obj.y - obj.y) < 1)
         );
+    }
+
+    //
+    addGameObject(gameObject, priority)
+    {
+        if (priority === 0)
+        {
+            this.gameObjects.unshift(gameObject);
+        }
+        else
+        {
+        this.gameObjects.push(gameObject);
+        }
     }
 
     pause()

@@ -41,6 +41,13 @@ socket.on('startGame', (data) => {
     data.players.forEach(p => {
         displayMessage(`Jugador: ${p.username}, Equipo: ${p.team}`);
     });
+    let backgroundImage = new Image();
+    backgroundImage.src = './background.png';
+    // Ajustar el ancho y la altura para que ocupen todo el canvas
+    width = context.canvas.width;
+    height = context.canvas.height;
+    let background = new ImageObject(backgroundImage, context, width, height );
+    game.addGameObject(background, 0);
     game.start(); // Iniciar el juego
 });
 
@@ -78,6 +85,14 @@ socket.on('gamePaused', (isPaused) => {
     }
 });
 
+document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') {
+        socket.emit('gamePaused', true);
+    } else {
+        socket.emit('gamePaused', false);
+    }
+});
+
 function login() {
     player.login(player.username);
 }
@@ -108,11 +123,6 @@ function update() {
     game.update(); // Delegar la actualización a la instancia de Game
 }
 
-// Función para dibujar en el canvas dependiendo del movimiento
-function drawMoveOnCanvas(element) {
-    game.gameObjects.push(element);
-    element.draw();
-}
 
 // Función para crear un elemento a partir de los datos recibidos
 function createElementFromData(data) {
@@ -126,6 +136,7 @@ if (lobbyId) {
 } else {
     createLobby();
 }
+
 
 // Iniciar el bucle de actualización a aproximadamente 30 FPS
 const FPS = 30;
