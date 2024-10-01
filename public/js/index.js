@@ -6,6 +6,8 @@ let createLobby = false;
 function checkUsername() {
     const username = document.getElementById('username').value;
     justCheckingUsername = true;
+    document.getElementById('welcomeUser').innerText = document.getElementById('username').value;
+    document.getElementById('lobbyOptions').style.display = 'block';
     socket.emit('checkUsername', username);
 }
 
@@ -16,7 +18,18 @@ function checkUsernameAndCreateLobby() {
     socket.emit('checkUsername', username);
 }
 
-function checkUsernameAndJoinLobby() {
+function checkUsernameAndJoinLobby(event) {
+    // Prevent default action if the event is triggered by a button click
+    if (event) {
+        event.preventDefault();
+    }
+    
+    const lobbyId = document.getElementById('lobbyId').value;
+    if (!lobbyId) {
+        alert('Insert a lobby ID');
+        return; // Exit the function if lobbyId is empty
+    }
+    
     const username = document.getElementById('username').value;
     createLobby = false;
     justCheckingUsername = false;
