@@ -111,6 +111,11 @@ io.on('connection', (socket) => {
         const isAvailable = !Object.values(users).some(user => user.username === username);
         socket.emit('usernameViability', isAvailable);
     });
+
+    socket.on('checkLobby', (lobbyId) => {
+        const exists = lobbies[lobbyId] !== undefined;
+        socket.emit('lobbyExists', exists);
+    });
 });
 
 server.listen(port, () => {

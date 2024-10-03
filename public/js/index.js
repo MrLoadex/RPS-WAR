@@ -36,10 +36,10 @@ function checkUsernameAndJoinLobby(event) {
     socket.emit('checkUsername', username);
 }
 
-function newGame() {
-    const lobbyId = document.getElementById('lobbyId').value;
+function newGame(lobbyId) {
     const username = document.getElementById('username').value;
-    window.location.href = `client.html?username=${encodeURIComponent(username)}&lobbyId=${encodeURIComponent(lobbyId)}`;
+    lobbyDoesExist = true;
+    window.location.href = `client.html?username=${encodeURIComponent(username)}&lobbyId=${(lobbyId)}`;
 }
 
 function unlockLobbyButtons() {
@@ -53,8 +53,18 @@ socket.on('usernameViability', (viability) => {
         return;
     }
     if (!justCheckingUsername) {
-        newGame();
+        if (createLobby) {
+            socket.emit('checkLobby', lobbyId);
+        } else {
+            newGame(0);
+        }
     } else {
         unlockLobbyButtons();
+    }
+});
+
+socket.on('lobbyExists', (exists) => {
+    if (exists) {
+        newGame(document.getElementById('lobbyId').value);
     }
 });
