@@ -48,6 +48,7 @@ socket.on('startGame', (data) => {
     height = context.canvas.height;
     let background = new ImageObject(backgroundImage, context, width, height );
     game.addGameObject(background, 0);
+    game.players = data.players;
     game.start(); // Iniciar el juego
 });
 

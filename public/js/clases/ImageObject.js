@@ -1,8 +1,7 @@
 class ImageObject extends GameObject {
     constructor(image, context, width= 50, height = 50, x = 0, y = 0) {
-        super();
+        super(context);
         this.image = image;
-        this.context = context;
         this.x = x;
         this.y = y;
         this.width = width;

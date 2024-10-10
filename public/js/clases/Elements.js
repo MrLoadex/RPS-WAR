@@ -1,10 +1,9 @@
 class Element extends GameObject {
   constructor(team, context) {
-    super();
+    super(context);
     this.size;
     this.color;
     this.team = team;
-    this.context = context;
     this.speed = 2; // Velocidad de movimiento
     this.setInitialPosition();
     this.isDestroyed = false;

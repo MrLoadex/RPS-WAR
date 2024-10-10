@@ -1,5 +1,6 @@
 class GameObject {
-    constructor() {
+    constructor(context) {
+        this.context = context;
     }
 
     start()

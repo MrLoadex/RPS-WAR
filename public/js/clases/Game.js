@@ -8,6 +8,37 @@ class Game {
     }
 
     start() {
+        const playerLeft = this.players.find(player => player.team === 'left');
+        const playerRight = this.players.find(player => player.team === 'right');
+        if (!playerLeft || !playerRight) {
+            throw new Error("No se encontraron jugadores para ambos equipos.");
+        }
+        
+        let playerLGO = this.crearPlayerGameObject('left');
+        this.gameObjects.push(playerLGO);
+        let playerRGO = this.crearPlayerGameObject('right');
+        this.gameObjects.push(playerRGO);
+    
+    }
+
+    crearPlayerGameObject(team) {
+        const imagenes = {
+            threeLives: new Image(),
+            twoLives: new Image(),
+            oneLife: new Image(),
+            zeroLives: new Image()
+        };
+
+        const assetPrefix = team === 'left' ? 'player_left' : 'player_right';
+        imagenes.threeLives.src = `./assets/${assetPrefix}_3.png`;
+        imagenes.twoLives.src = `./assets/${assetPrefix}_2.png`;
+        imagenes.oneLife.src = `./assets/${assetPrefix}_1.png`;
+        imagenes.zeroLives.src = `./assets/${assetPrefix}_0.png`;
+
+        const x = team === 'left' ? 50 : this.context.canvas.width - 150;
+        const y = this.context.canvas.height / 2 - 50;
+
+        return new PlayerGameObject(team, imagenes, this.context, this, 100, 100, x, y);
     }
 
     createElement(data) {
@@ -73,7 +104,8 @@ class Game {
         this.gameObjects.push(gameObject);
         }
     }
-
+    // jugador pierde vida 
+    
     pause()
     {
         this.isPaused = true;
