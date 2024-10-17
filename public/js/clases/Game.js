@@ -5,15 +5,20 @@ class Game {
         this.context = context;
         this.gameObjects = [];
         this.isPaused = false;
+        this.updatedLives = true;
     }
 
     start() {
-        const playerLeft = this.players.find(player => player.team === 'left');
-        const playerRight = this.players.find(player => player.team === 'right');
+        // Comprobar que hay un jugador en cada equipo
+        let playerLeft = this.players.find(player => player.team === 'left');
+        let playerRight = this.players.find(player => player.team === 'right');
         if (!playerLeft || !playerRight) {
-            throw new Error("No se encontraron jugadores para ambos equipos.");
+            throw new Error("Players for both teams were not found.");
         }
-        
+        // Setear las vidas de los jugadores
+        playerLeft.lives = 3;
+        playerRight.lives = 3;
+        // Crear los objetos de los jugadores
         let playerLGO = this.crearPlayerGameObject('left');
         this.gameObjects.push(playerLGO);
         let playerRGO = this.crearPlayerGameObject('right');
@@ -22,19 +27,21 @@ class Game {
     }
 
     crearPlayerGameObject(team) {
+        // TODO: Implementar la lógica para crear el objeto del jugador
         const imagenes = {
             threeLives: new Image(),
             twoLives: new Image(),
             oneLife: new Image(),
             zeroLives: new Image()
         };
-
+        // Implementar la lógica para cargar las imágenes
         const assetPrefix = team === 'left' ? 'player_left' : 'player_right';
         imagenes.threeLives.src = `./assets/${assetPrefix}_3.png`;
         imagenes.twoLives.src = `./assets/${assetPrefix}_2.png`;
         imagenes.oneLife.src = `./assets/${assetPrefix}_1.png`;
         imagenes.zeroLives.src = `./assets/${assetPrefix}_0.png`;
 
+        // Implementar la lógica para calcular la posición del jugador
         const x = team === 'left' ? 50 : this.context.canvas.width - 150;
         const y = this.context.canvas.height / 2 - 50;
 
@@ -105,7 +112,32 @@ class Game {
         }
     }
     // jugador pierde vida 
+    notifyLifeLoss(team)
+    {
+        if (!this.updatedLives){return;}
+        this.updatedLives = false;
+        let player = this.players.find(player => player.team === team);
+        player.lives--;
+    }
     
+    updateLives(players){
+        players.forEach(p => {
+            let player = this.players.find(player => player.team === p.team);
+            if(player){
+                player.lives = p.lives;
+                let playerGO = this.gameObjects.find(obj => obj instanceof PlayerGameObject && obj.team === p.team);
+                if(playerGO){
+                    playerGO.changeImage(p.lives);
+                }
+                // SIN IMPLEMENTAR AUN
+                // actualizar textImageGameObject de las vidas restantes
+                // let textImageGameObject = this.gameObjects.find(obj => obj instanceof TextImageGameObject && obj.team === p.team);
+                // textImageGameObject.updateText(p.lives);
+            }
+            this.updatedLives = true; // resetea el flag de updatedLives
+        });
+    }
+
     pause()
     {
         this.isPaused = true;

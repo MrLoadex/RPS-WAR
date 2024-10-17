@@ -4,6 +4,7 @@ class Player {
     this.username = username;
     this.team = null;
     this.currentLobbyId = null;
+    this.lives = 3;
   }
 
   login(usernameInput) {

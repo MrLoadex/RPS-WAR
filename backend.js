@@ -83,6 +83,15 @@ io.on('connection', (socket) => {
         }
     });
 
+
+    // Manejo del evento 'playerLostLife'
+    socket.on('playerLostLife', (players) => {
+        const lobbyId = users[socket.id]?.lobbyId;
+        if (lobbyId && lobbies[lobbyId].gameStarted) {
+            io.to(lobbyId).emit('playerLostLife', players);
+        }
+    });
+
     // Desconexión
     socket.on('disconnect', () => {
         const lobbyId = users[socket.id]?.lobbyId;
@@ -120,5 +129,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(port, () => {
-    console.log(`Servidor escuchando en el puerto http://localhost:${port}`);
+    console.log(`Server listening on port http://localhost:${port}`);
 });

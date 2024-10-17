@@ -28,9 +28,6 @@ class PlayerGameObject extends ImageObject {
         const distanciaX = Math.abs(this.x - otherGameObject.x);
         return distanciaX < (this.width + otherGameObject.size) / 2;
     }
-    draw(){
-        this.context.drawImage(this.image, this.x, this.y, this.width, this.height);
-    }
     handleCollision(otherElement){
         if(!otherElement instanceof Element){
             return;
@@ -39,6 +36,12 @@ class PlayerGameObject extends ImageObject {
         if(this.team === otherElement.team){
             return;
         }
-        console.log("perdiste");
+
+        if (!this.gameInstance.updatedLives){
+            return;
+        }
+
+        this.gameInstance.notifyLifeLoss(this.team);
+        otherElement.destroy(); // Destruir el elemento para evitar contacto continuo y no perder mas vidas
     }
 }

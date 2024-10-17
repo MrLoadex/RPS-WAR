@@ -53,7 +53,6 @@ socket.on('startGame', (data) => {
 });
 
 socket.on('playerMove', (moveData) => {
-    displayMessage(`Jugador ${moveData.username} (${moveData.team}) hizo un movimiento: ${moveData.type}`);
     game.addMove(moveData); // Agregar el movimiento al juego
 });
 
@@ -73,7 +72,6 @@ socket.on('elementDestroyed', (data) => {
           Math.abs(obj.x - data.x) < 1 && 
           Math.abs(obj.y - data.y) < 1)
     );
-    displayMessage(`Un ${data.type} del equipo ${data.team} ha sido destruido.`);
 });
 
 socket.on('gamePaused', (isPaused) => {
@@ -83,6 +81,18 @@ socket.on('gamePaused', (isPaused) => {
     } else {
         console.log("Continuemos perri!");
         game.resume();
+    }
+});
+
+socket.on('playerLostLife', (players) => {
+
+    for (let i = 0; i < players.length; i++) {
+        if (player.username === players[i].username) {
+            player.lives = players[i].lives;
+            displayMessage(`Has perdido una vida. Vidas restantes: ${players[i].lives}`);
+            game.updateLives(players);
+            break;
+        }
     }
 });
 
@@ -120,10 +130,19 @@ function displayMessage(message) {
 function update() {
     // Limpiar el canvas
     context.clearRect(0, 0, canvas.width, canvas.height); 
-    // Dibujar fondo
     game.update(); // Delegar la actualización a la instancia de Game
+    if (!game.updatedLives) {
+        updateLives();
+    }
 }
 
+function updateLives(){
+    let players = game.players;
+    // Solo emitira el evento el player right (para evitar que el evento se repita)
+    if (player.team ==='right'){
+        socket.emit("playerLostLife", players);
+    }
+}
 
 // Función para crear un elemento a partir de los datos recibidos
 function createElementFromData(data) {

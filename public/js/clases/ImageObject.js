@@ -18,7 +18,7 @@ class ImageObject extends GameObject {
         if (this.image) {
             this.context.drawImage(this.image, this.x, this.y, this.width, this.height);
         } else {
-            throw new Error("No hay imagen para dibujar");
+            throw new Error("There is no image to draw");
         }
     }
 
