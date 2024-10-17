@@ -43,9 +43,7 @@ class Element extends GameObject {
 
   checkCollision(otherElement) {
     if (this.isDestroyed || otherElement.isDestroyed) return false;
-    const distance = Math.sqrt(
-      Math.pow(this.x - otherElement.x, 2) + Math.pow(this.y - otherElement.y, 2)
-    );
+    const distance = Math.abs(this.x - otherElement.x);
     return distance < (this.size + otherElement.size) / 2;
   }
 

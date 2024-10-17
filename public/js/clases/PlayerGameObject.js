@@ -25,9 +25,16 @@ class PlayerGameObject extends ImageObject {
     update(){}
     checkCollision(otherGameObject) {
         if (otherGameObject.isDestroyed) return false;
-        const distanciaX = Math.abs(this.x - otherGameObject.x);
-        return distanciaX < (this.width + otherGameObject.size) / 2;
+        
+        const thisCenterX = this.x + this.width / 2;
+
+        const otherCenterX = otherGameObject.x + otherGameObject.size / 2;
+
+        const distancia = Math.abs(thisCenterX - otherCenterX);
+        const collision = distancia < (this.width + otherGameObject.size) / 2;
+        return collision;
     }
+
     handleCollision(otherElement){
         if(!otherElement instanceof Element){
             return;
