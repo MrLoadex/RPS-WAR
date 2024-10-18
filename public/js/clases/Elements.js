@@ -1,12 +1,14 @@
-class Element extends GameObject {
-  constructor(team, context) {
-    super(context);
-    this.size;
-    this.color;
+class Element extends GifGameObject {
+  constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
+    super(images[0], context, width, height, 0, 0, images, fps);
     this.team = team;
     this.speed = 2; // Velocidad de movimiento
     this.setInitialPosition();
     this.isDestroyed = false;
+  }
+
+  start() {
+    super.start();
   }
 
   setInitialPosition() {
@@ -18,11 +20,6 @@ class Element extends GameObject {
     } else {
       this.x = canvasWidth * 0.75;
     }
-  }
-
-  draw() {
-    // Método virtual, esperado ser sobrescrito por las subclases
-    throw new Error("draw() debe ser implementado por las subclases");
   }
 
   move() {
@@ -44,7 +41,7 @@ class Element extends GameObject {
   checkCollision(otherElement) {
     if (this.isDestroyed || otherElement.isDestroyed) return false;
     const distance = Math.abs(this.x - otherElement.x);
-    return distance < (this.size + otherElement.size) / 2;
+    return distance < (this.width + otherElement.width) / 2;
   }
 
   handleCollision(otherElement) {
@@ -77,50 +74,19 @@ class Element extends GameObject {
 }
 
 class Paper extends Element {
-  constructor(team, context) {
-    super(team, context);
-    this.size = 50; // Tamaño específico para Paper
-    this.color = 'blue'; // Color específico para Paper
-  }
-
-  draw() {
-    const { x, y } = this.getDrawPosition();
-    this.context.fillStyle = this.color;
-    this.context.fillRect(x - this.size / 2, y - this.size / 2, this.size, this.size);
+  constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
+    super(team, context, height, width, images, fps);
   }
 }
 
 class Rock extends Element {
-  constructor(team, context) {
-    super(team, context);
-    this.size = 50; // Tamaño específico para Rock
-    this.color = 'gray'; // Color específico para Rock
-  }
-
-  draw() {
-    const { x, y } = this.getDrawPosition();
-    this.context.beginPath();
-    this.context.arc(x, y, this.size / 2, 0, Math.PI * 2);
-    this.context.fillStyle = this.color;
-    this.context.fill();
+  constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
+    super(team, context, height, width, images, fps);
   }
 }
 
 class Scissors extends Element {
-  constructor(team, context) {
-    super(team, context);
-    this.size = 50; // Tamaño específico para Scissors
-    this.color = 'red'; // Color específico para Scissors
-  }
-
-  draw() {
-    const { x, y } = this.getDrawPosition();
-    this.context.beginPath();
-    this.context.moveTo(x, y - this.size / 2);
-    this.context.lineTo(x - this.size / 2, y + this.size / 2);
-    this.context.lineTo(x + this.size / 2, y + this.size / 2);
-    this.context.closePath();
-    this.context.fillStyle = this.color;
-    this.context.fill();
+  constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
+    super(team, context, height, width, images, fps);
   }
 }

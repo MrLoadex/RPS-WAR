@@ -1,4 +1,4 @@
-class PlayerGameObject extends ImageObject {
+class PlayerGameObject extends ImageGameObject {
     constructor(team,images, context, gameInstance ,width= 50, height = 50, x = 0, y = 0) {
         super(images.threeLives, context, width, height, x, y);
         this.team = team;
@@ -28,10 +28,10 @@ class PlayerGameObject extends ImageObject {
         
         const thisCenterX = this.x + this.width / 2;
 
-        const otherCenterX = otherGameObject.x + otherGameObject.size / 2;
+        const otherCenterX = otherGameObject.x + otherGameObject.width / 2;
 
         const distancia = Math.abs(thisCenterX - otherCenterX);
-        const collision = distancia < (this.width + otherGameObject.size) / 2;
+        const collision = distancia < (this.width + otherGameObject.width) / 2;
         return collision;
     }
 

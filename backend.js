@@ -92,6 +92,14 @@ io.on('connection', (socket) => {
         }
     });
 
+    // Manejo del evento 'resetGame'
+    socket.on('resetGame', () => {
+        const lobbyId = users[socket.id]?.lobbyId;
+        if (lobbyId && lobbies[lobbyId].gameStarted) {
+            io.to(lobbyId).emit('resetGame');
+        }
+    });
+
     // Desconexión
     socket.on('disconnect', () => {
         const lobbyId = users[socket.id]?.lobbyId;

@@ -1,8 +1,11 @@
-class Game {
-    constructor(lobbyId, players, context) {
+class Game extends EventEmitter {
+    constructor(lobbyId, mainPlayer, players, context, fps) {
+        super();
         this.lobbyId = lobbyId;
+        this.mainPlayer = mainPlayer;
         this.players = players;
         this.context = context;
+        this.fps = fps;
         this.gameObjects = [];
         this.isPaused = false;
         this.updatedLives = true;
@@ -19,16 +22,16 @@ class Game {
         playerLeft.lives = 3;
         playerRight.lives = 3;
         // Crear los objetos de los jugadores
-        let playerLGO = this.crearPlayerGameObject('left');
+        let playerLGO = this.createPlayerGameObject('left');
         this.gameObjects.push(playerLGO);
-        let playerRGO = this.crearPlayerGameObject('right');
+        let playerRGO = this.createPlayerGameObject('right');
         this.gameObjects.push(playerRGO);
     
     }
 
-    crearPlayerGameObject(team) {
+    createPlayerGameObject(team) {
         // TODO: Implementar la lógica para crear el objeto del jugador
-        const imagenes = {
+        const images = {
             threeLives: new Image(),
             twoLives: new Image(),
             oneLife: new Image(),
@@ -36,26 +39,40 @@ class Game {
         };
         // Implementar la lógica para cargar las imágenes
         const assetPrefix = team === 'left' ? 'player_left' : 'player_right';
-        imagenes.threeLives.src = `./assets/${assetPrefix}_3.png`;
-        imagenes.twoLives.src = `./assets/${assetPrefix}_2.png`;
-        imagenes.oneLife.src = `./assets/${assetPrefix}_1.png`;
-        imagenes.zeroLives.src = `./assets/${assetPrefix}_0.png`;
+        images.threeLives.src = `./assets/${assetPrefix}_3.png`;
+        images.twoLives.src = `./assets/${assetPrefix}_2.png`;
+        images.oneLife.src = `./assets/${assetPrefix}_1.png`;
+        images.zeroLives.src = `./assets/${assetPrefix}_0.png`;
 
         // Implementar la lógica para calcular la posición del jugador
         const x = team === 'left' ? 50 : this.context.canvas.width - 150;
         const y = this.context.canvas.height / 2 - 50;
 
-        return new PlayerGameObject(team, imagenes, this.context, this, 100, 100, x, y);
+        return new PlayerGameObject(team, images, this.context, this, 100, 100, x, y);
     }
 
     createElement(data) {
+        let images = [
+            new Image(),
+            new Image(),
+            new Image(),
+            new Image(),
+            new Image()
+        ];
+        
+        // Implementar la lógica para cargar las imágenes
+        //Esto deberia estar dentro de cada elemento, pero solo es testeo
+        images.forEach((image, index) => {
+            image.src = `./assets/Elements/Rock_${index}.png`;
+
+        });
         switch (data.type) {
             case 'Rock':
-                return new Rock(data.team, this.context);
+                return new Rock(data.team, this.context, 50, 50, images, this.fps);
             case 'Paper':
-                return new Paper(data.team, this.context);
+                return new Paper(data.team, this.context, 50, 50, images, this.fps);
             case 'Scissors':
-                return new Scissors(data.team, this.context);
+                return new Scissors(data.team, this.context, 50, 50, images, this.fps);
             default:
                 return null;
         }
@@ -99,7 +116,6 @@ class Game {
         );
     }
 
-    //
     addGameObject(gameObject, priority)
     {
         if (priority === 0)
@@ -112,12 +128,12 @@ class Game {
         }
     }
     // jugador pierde vida 
-    notifyLifeLoss(team)
-    {
-        if (!this.updatedLives){return;}
+    notifyLifeLoss(team) {
+        if (!this.updatedLives) return;
         this.updatedLives = false;
         let player = this.players.find(player => player.team === team);
         player.lives--;
+        this.emit('lifeLost'); // Emitir evento de pérdida de vida
     }
     
     updateLives(players){
@@ -136,8 +152,50 @@ class Game {
             }
             this.updatedLives = true; // resetea el flag de updatedLives
         });
+        this.verifyGameEnd();
     }
 
+    verifyGameEnd()
+    {
+        if (this.mainPlayer.lives <= 0)
+        {
+            console.log("Main player lost");
+            this.endGame(false);
+        }
+        else if (this.players.find(player => player.lives <= 0))
+        {
+            console.log("Other player lost");
+            this.endGame(true);
+        }
+    }
+
+    endGame(winner)
+    {
+        // Abrir un modal de fin de juego
+        this.emit('gameEnded', winner);
+        this.pause(); // Pausar el juego
+    }
+
+    resetGame()
+    {
+        // Recorrer gameobjects y destruirlos todos menos los jugadores
+        this.gameObjects.forEach(obj => {
+            //recorrer players y resetear las vidas
+            this.players.forEach(player => {
+                player.lives = 3;
+            });
+            if (obj instanceof PlayerGameObject)
+            {
+                obj.changeImage(3);
+            }
+            else if (obj instanceof Element)
+            {
+                obj.destroy();
+            }
+        });
+        this.resume(); // Reanudar el juego
+    }
+            
     pause()
     {
         this.isPaused = true;

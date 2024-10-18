@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego</title>
+    <link rel="stylesheet" href="style.css">
     <style>
         canvas {
             border: 1px solid black;
@@ -19,14 +20,39 @@
     <button onclick="sendMove('Scissors')">Tijeras</button>
 
     <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <!-- Trigger/Open The Modal -->
+    <button id="gameLobbyModalBtn">Lobby Id</button>
+
+    <!-- The Lobby Modal -->
+    <div id="gameLobbyModal" class="modal" style="display: block;">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="gameLobbyModalContent">Lobby id: (No deberias ver esto)</p>
+        </div>
+    </div>
+
+    
+    <!-- El Modal de Fin de Juego -->
+    <div id="gameEndedModal" class="modal" style="display: none;">
+        <!-- Contenido del modal -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="gameEndModalContent">El juego ha terminado. ¿Desea jugar de nuevo? (No deberias ver esto)</p>
+            <button onclick="resetGame()">Volver a jugar</button>
+        </div>
+    </div>
+
 
     <div id="messages"></div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/clases/GameObject.js"></script>
+    <script src="./js/clases/EventEmitter.js"></script>
+    <script src="./js/clases/GameObject.js"></script>
+    <script src="./js/clases/ImageGameObject.js"></script> 
+    <script src="./js/clases/GifGameObject.js"></script>
     <script src="./js/clases/Elements.js"></script>
     <script src="./js/clases/Player.js"></script>
-    <script src="./js/clases/ImageObject.js"></script> 
     <script src="./js/clases/PlayerGameObject.js"></script>
     <script src="./js/clases/Game.js"></script>
     <script src="/js/client.js"></script>

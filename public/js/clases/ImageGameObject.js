@@ -1,4 +1,4 @@
-class ImageObject extends GameObject {
+class ImageGameObject extends GameObject {
     constructor(image, context, width= 50, height = 50, x = 0, y = 0) {
         super(context);
         this.image = image;
