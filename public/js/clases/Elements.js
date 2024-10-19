@@ -44,21 +44,6 @@ class Element extends GifGameObject {
     return distance < (this.width + otherElement.width) / 2;
   }
 
-  handleCollision(otherElement) {
-    if (this.constructor === otherElement.constructor) {
-      this.destroy();
-      otherElement.destroy();
-    } else if (
-      (this instanceof Rock && otherElement instanceof Scissors) ||
-      (this instanceof Paper && otherElement instanceof Rock) ||
-      (this instanceof Scissors && otherElement instanceof Paper)
-    ) {
-      otherElement.destroy();
-    } else {
-      this.destroy();
-    }
-  }
-
   destroy() {
     this.isDestroyed = true;
     // Emitir evento de destrucción
@@ -77,16 +62,70 @@ class Paper extends Element {
   constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
     super(team, context, height, width, images, fps);
   }
+
+  handleCollision(otherElement) {
+    if (otherElement instanceof Rock) {
+      otherElement.destroy();
+    } else if (otherElement instanceof Scissors) {
+      this.destroy();
+    }
+    else if (otherElement instanceof Paper) {
+      //si el otro no esta destruido, destruimos el otro
+      if (!otherElement.isDestroyed) {
+        otherElement.destroy();
+      }
+      //si el otro esta destruido, destruimos nosotros
+      if (!this.isDestroyed) {
+        this.destroy();
+      }
+    }
+  }
 }
 
 class Rock extends Element {
   constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
     super(team, context, height, width, images, fps);
   }
+
+  handleCollision(otherElement) {
+    if (otherElement instanceof Scissors) {
+      otherElement.destroy();
+    } else if (otherElement instanceof Paper) {
+      this.destroy();
+    }
+    else if (otherElement instanceof Rock) {
+      //si el otro no esta destruido, destruimos el otro
+      if (!otherElement.isDestroyed) {
+        otherElement.destroy();
+      }
+      //si el otro esta destruido, destruimos nosotros
+      if (!this.isDestroyed) {
+        this.destroy();
+      }
+    }
+  }
 }
 
 class Scissors extends Element {
   constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
     super(team, context, height, width, images, fps);
+  }
+
+  handleCollision(otherElement) {
+    if (otherElement instanceof Paper) {
+      otherElement.destroy();
+    } else if (otherElement instanceof Rock) {
+      this.destroy();
+    }
+    else if (otherElement instanceof Scissors) {
+      //si el otro no esta destruido, destruimos el otro
+      if (!otherElement.isDestroyed) {
+        otherElement.destroy();
+      }
+      //si el otro esta destruido, destruimos nosotros
+      if (!this.isDestroyed) {
+        this.destroy();
+      }
+    }
   }
 }

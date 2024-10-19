@@ -1,4 +1,4 @@
-class EventEmitter {
+class EventTarger {
     constructor() {
         this.events = {};
     }
@@ -10,7 +10,7 @@ class EventEmitter {
         this.events[event].push(listener);
     }
 
-    emit(event, ...args) {
+    dispatchEvent(event, ...args) {
         if (this.events[event]) {
             // Esta línea itera sobre cada listener registrado para el evento especificado y llama a cada listener con los argumentos proporcionados.
             this.events[event].forEach(listener => {

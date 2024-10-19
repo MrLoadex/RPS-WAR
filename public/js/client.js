@@ -43,7 +43,7 @@ window.onclick = function(event) {
   }
 }
 
-// REGION DE EVENTOS
+// REGION DE EVENTOS INTERNOS DEL JUEGO
 game.on('lifeLost', () => {
     updateLives();
 });
@@ -57,6 +57,7 @@ game.on('gameEnded', (winner) => {
     gameEndedModal.style.display = 'block';
 });
 
+// REGION DE EVENTOS EXTERNOS DEL JUEGO
 socket.on('loginSuccess', (data) => {
     player.userID = data.userId;
     player.username = data.username;

@@ -1,4 +1,4 @@
-class Game extends EventEmitter {
+class Game extends EventTarger {
     constructor(lobbyId, mainPlayer, players, context, fps) {
         super();
         this.lobbyId = lobbyId;
@@ -133,7 +133,7 @@ class Game extends EventEmitter {
         this.updatedLives = false;
         let player = this.players.find(player => player.team === team);
         player.lives--;
-        this.emit('lifeLost'); // Emitir evento de pérdida de vida
+        this.dispatchEvent('lifeLost'); // Emitir evento de pérdida de vida
     }
     
     updateLives(players){
@@ -172,7 +172,7 @@ class Game extends EventEmitter {
     endGame(winner)
     {
         // Abrir un modal de fin de juego
-        this.emit('gameEnded', winner);
+        this.dispatchEvent('gameEnded', winner);
         this.pause(); // Pausar el juego
     }
 
