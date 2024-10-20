@@ -1,0 +1,6 @@
+mostrar vidas actuales del jugador 1/3 2/3 3/3 creando la clase TextGameObject
+mostrar texto en pantalla diciendo HAS PERDIDO UNA VIDA (misma clase)
+mover botones al canvas y agregarles estilo
+ampliar canvas a toda la pantalla
+renombrar clases a classes y solucionar errores provenientes
+estilizar botones y modales

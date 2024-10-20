@@ -7,62 +7,67 @@
     <title>Juego</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
         canvas {
-            border: 1px solid black;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <h1>Bienvenido al Juego</h1>
-
-    <button onclick="sendMove('Rock')">Piedra</button>
-    <button onclick="sendMove('Paper')">Papel</button>
-    <button onclick="sendMove('Scissors')">Tijeras</button>
-
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas"></canvas>
+    
     <!-- Trigger/Open The Modal -->
     <button id="gameLobbyModalBtn">Lobby Id</button>
 
     <!-- The Lobby Modal -->
-    <div id="gameLobbyModal" class="modal" style="display: block;">
-        <!-- Modal content -->
+    <div id="gameLobbyModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p id="gameLobbyModalContent">Lobby id: (No deberias ver esto)</p>
+            <h2>Game Lobby</h2>
+            <p id="gameLobbyModalContent">Lobby ID: (You shouldn't see this)</p>
         </div>
     </div>
 
     <!-- The Pause Modal -->
-    <div id="gamePausedModal" class="modal" style="display: none;">
-        <!-- Modal content -->
+    <div id="gamePausedModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p id="gamePausedModalContent">El juego ha sido pausado. Cuando tu compañero esté listo, el juego se reanudará.</p>
+            <h2>Game Paused</h2>
+            <p id="gamePausedModalContent">The game has been paused. When your partner is ready, the game will resume.</p>
         </div>
     </div>
 
-
-    <!-- El Modal de Fin de Juego -->
-    <div id="gameEndedModal" class="modal" style="display: none;">
-        <!-- Contenido del modal -->
+    <!-- The Game End Modal -->
+    <div id="gameEndedModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p id="gameEndModalContent">El juego ha terminado. ¿Desea jugar de nuevo? (No deberias ver esto)</p>
-            <button onclick="resetGame()">Volver a jugar</button>
+            <h2>Game Over</h2>
+            <p id="gameEndModalContent">The game has ended. Would you like to play again?</p>
+            <button onclick="resetGame()">Play Again</button>
         </div>
     </div>
-
 
     <div id="messages"></div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="./js/clases/GameObject.js"></script>
-    <script src="./js/clases/ImageGameObject.js"></script> 
-    <script src="./js/clases/GifGameObject.js"></script>
-    <script src="./js/clases/Elements.js"></script>
-    <script src="./js/clases/Player.js"></script>
-    <script src="./js/clases/PlayerGameObject.js"></script>
-    <script src="./js/clases/Game.js"></script>
+    <script src="./js/classes/GameObject.js"></script>
+    <script src="./js/classes/ImageGameObject.js"></script> 
+    <script src="./js/classes/GifGameObject.js"></script>
+    <script src="./js/classes/Elements.js"></script>
+    <script src="./js/classes/Player.js"></script>
+    <script src="./js/classes/PlayerGameObject.js"></script>
+    <script src="./js/classes/Game.js"></script>
     <script src="/js/client.js"></script>
 </body>
 </html>

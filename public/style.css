@@ -2,42 +2,85 @@
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 20; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-  
-  /* Modal Content/Box */
-  .modal-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Content/Box */
+.modal-content {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
-  }
-  
-  /* The Close Button */
-  .close {
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    animation: slideDown 0.3s ease-in-out;
+}
+
+/* The Close Button */
+.close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-    color: black;
+    transition: color 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
     text-decoration: none;
     cursor: pointer;
-  }
+}
 
-  /* Estilo de los botones */
-  button {
+/* Modal content styles */
+.modal-content h2 {
+    color: #333;
+    margin-top: 0;
+}
+
+.modal-content p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Button styles within modals */
+.modal-content button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #45a049;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Estilo de los botones */
+button {
     width: 50px; /* Ancho del botón */
     height: 50px; /* Alto del botón */
     background-color: #2b2f2b; /* Color de fondo */
@@ -47,8 +90,86 @@
     font-size: 16px; /* Tamaño de la fuente */
     cursor: pointer; /* Cursor de puntero */
     transition: background-color 0.3s; /* Transición suave */
-  }
+    z-index: 10;
+}
 
-  button:hover {
+button:hover {
     background-color: #3b423b; /* Color de fondo al pasar el ratón */
-  }
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#gameLobbyModalBtn {
+    position: absolute !important;
+    top: 20px !important;
+    left: 20px !important;
+    z-index: 15 !important;
+    padding: 15px 25px !important;
+    font-size: 20px !important;
+    background-color: #008CBA !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s !important;
+    width: auto !important;
+    height: auto !important;
+    box-shadow: 0 6px #0077A7 !important;
+}
+
+#gameLobbyModalBtn:hover {
+    background-color: #007B9A !important;
+}
+
+#gameLobbyModalBtn:active {
+    background-color: #006688 !important;
+    box-shadow: 0 3px #0077A7 !important;
+    transform: translateY(3px) !important;
+}
+
+/* Ensure modals are on top */
+.modal {
+    z-index: 20;
+}
+
+/* Ensure canvas is behind everything */
+canvas {
+    z-index: 0;
+}
+
+.game-button {
+    padding: 20px 30px; /* Increased padding */
+    font-size: 22px; /* Increased font size */
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 20px; /* Increased border radius */
+    box-shadow: 0 12px #999; /* Increased shadow */
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.game-button:hover {
+    background-color: #45a049;
+}
+
+.game-button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 6px #666;
+    transform: translateY(6px);
+}
