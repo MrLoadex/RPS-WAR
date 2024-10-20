@@ -1,4 +1,4 @@
-class Element extends GifGameObject {
+class ElementGameObject extends GifGameObject {
   constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
     super(images[0], context, width, height, 0, 0, images, fps);
     this.team = team;
@@ -8,7 +8,12 @@ class Element extends GifGameObject {
   }
 
   start() {
+    this.setImages();
     super.start();
+  }
+
+  setImages() {
+    throw new Error("El método 'setImages' debe ser implementado por las clases hijas.");
   }
 
   setInitialPosition() {
@@ -44,6 +49,21 @@ class Element extends GifGameObject {
     return distance < (this.width + otherElement.width) / 2;
   }
 
+  handleCollision(otherElement) {
+    if (this.constructor === otherElement.constructor) {
+      this.destroy();
+      otherElement.destroy();
+    } else if (
+      (this instanceof Rock && otherElement instanceof Scissors) ||
+      (this instanceof Paper && otherElement instanceof Rock) ||
+      (this instanceof Scissors && otherElement instanceof Paper)
+    ) {
+      otherElement.destroy();
+    } else {
+      this.destroy();
+    }
+  }
+
   destroy() {
     this.isDestroyed = true;
     // Emitir evento de destrucción
@@ -58,74 +78,91 @@ class Element extends GifGameObject {
   }
 }
 
-class Paper extends Element {
+class Paper extends ElementGameObject {
   constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
     super(team, context, height, width, images, fps);
   }
 
-  handleCollision(otherElement) {
-    if (otherElement instanceof Rock) {
-      otherElement.destroy();
-    } else if (otherElement instanceof Scissors) {
-      this.destroy();
-    }
-    else if (otherElement instanceof Paper) {
-      //si el otro no esta destruido, destruimos el otro
-      if (!otherElement.isDestroyed) {
-        otherElement.destroy();
+  setImages() {
+    let images = [
+      new Image(),
+      new Image(),
+      new Image(),
+      new Image(),
+      new Image()
+    ];
+
+    
+    images.forEach((image, index) => {
+      if (this.team === 'right') {
+        image.src = `./assets/Elements/Paper/Paper_R_${index}.png`;
       }
-      //si el otro esta destruido, destruimos nosotros
-      if (!this.isDestroyed) {
-        this.destroy();
+      else {
+        image.src = `./assets/Elements/Paper/Paper_L_${index}.png`;
       }
-    }
+    });
+
+    this.images = images;
+    this.image = images[0];
   }
 }
 
-class Rock extends Element {
+class Rock extends ElementGameObject {
   constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
     super(team, context, height, width, images, fps);
   }
 
-  handleCollision(otherElement) {
-    if (otherElement instanceof Scissors) {
-      otherElement.destroy();
-    } else if (otherElement instanceof Paper) {
-      this.destroy();
-    }
-    else if (otherElement instanceof Rock) {
-      //si el otro no esta destruido, destruimos el otro
-      if (!otherElement.isDestroyed) {
-        otherElement.destroy();
+  setImages() {
+    let images = [
+      new Image(),
+      new Image(),
+      new Image(),
+      new Image(),
+      new Image()
+    ];
+  
+    // Implementar la lógica para cargar las imágenes
+    //Esto deberia estar dentro de cada elemento, pero solo es testeo
+    images.forEach((image, index) => {
+      if (this.team === 'right') {
+        image.src = `./assets/Elements/Rock/Rock_R_${index}.png`;
       }
-      //si el otro esta destruido, destruimos nosotros
-      if (!this.isDestroyed) {
-        this.destroy();
+      else {
+        image.src = `./assets/Elements/Rock/Rock_L_${index}.png`;
       }
-    }
+    });
+
+    this.images = images;
+    this.image = images[0];
   }
 }
 
-class Scissors extends Element {
+class Scissors extends ElementGameObject {
   constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
     super(team, context, height, width, images, fps);
   }
 
-  handleCollision(otherElement) {
-    if (otherElement instanceof Paper) {
-      otherElement.destroy();
-    } else if (otherElement instanceof Rock) {
-      this.destroy();
-    }
-    else if (otherElement instanceof Scissors) {
-      //si el otro no esta destruido, destruimos el otro
-      if (!otherElement.isDestroyed) {
-        otherElement.destroy();
+  setImages() {
+    let images = [
+      new Image(),
+      new Image(),
+      new Image(),
+      new Image(),
+      new Image(),
+    ];
+  
+    // Implementar la lógica para cargar las imágenes
+    //Esto deberia estar dentro de cada elemento, pero solo es testeo
+    images.forEach((image, index) => {
+        if (this.team === 'right') {
+        image.src = `./assets/Elements/Scissors/Scissors_R_${index}.png`;
       }
-      //si el otro esta destruido, destruimos nosotros
-      if (!this.isDestroyed) {
-        this.destroy();
+      else {
+        image.src = `./assets/Elements/Scissors/Scissors_L_${index}.png`;
       }
-    }
+    });
+
+    this.images = images;
+    this.image = images[0];
   }
 }

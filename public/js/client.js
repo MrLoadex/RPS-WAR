@@ -44,11 +44,12 @@ window.onclick = function(event) {
 }
 
 // REGION DE EVENTOS INTERNOS DEL JUEGO
-game.on('lifeLost', () => {
+game.addEventListener('lifeLost', () => {
     updateLives();
 });
 
-game.on('gameEnded', (winner) => {
+game.addEventListener('gameEnded', (e) => {
+    const winner = e.detail;
     if (winner) {
         displayMessage(`El juego ha terminado. Has ganado.`, "gameEndModalContent");
     } else {

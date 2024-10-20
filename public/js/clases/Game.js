@@ -1,4 +1,4 @@
-class Game extends EventTarger {
+class Game extends EventTarget {
     constructor(lobbyId, mainPlayer, players, context, fps) {
         super();
         this.lobbyId = lobbyId;
@@ -9,6 +9,8 @@ class Game extends EventTarger {
         this.gameObjects = [];
         this.isPaused = false;
         this.updatedLives = true;
+        this.timeToCreateElement = 1000;
+        this.canCreateElement = true;
     }
 
     start() {
@@ -52,27 +54,13 @@ class Game extends EventTarger {
     }
 
     createElement(data) {
-        let images = [
-            new Image(),
-            new Image(),
-            new Image(),
-            new Image(),
-            new Image()
-        ];
-        
-        // Implementar la lógica para cargar las imágenes
-        //Esto deberia estar dentro de cada elemento, pero solo es testeo
-        images.forEach((image, index) => {
-            image.src = `./assets/Elements/Rock_${index}.png`;
-
-        });
         switch (data.type) {
             case 'Rock':
-                return new Rock(data.team, this.context, 50, 50, images, this.fps);
+                return new Rock(data.team, this.context, 50, 50, this.fps);
             case 'Paper':
-                return new Paper(data.team, this.context, 50, 50, images, this.fps);
+                return new Paper(data.team, this.context, 50, 50, this.fps);
             case 'Scissors':
-                return new Scissors(data.team, this.context, 50, 50, images, this.fps);
+                return new Scissors(data.team, this.context, 50, 50, this.fps);
             default:
                 return null;
         }
@@ -103,8 +91,15 @@ class Game extends EventTarger {
     }
 
     addMove(moveData) {
+        //esperar 1 segundo antes de crear un nuevo elemento
+        if (!this.canCreateElement) return;
+        this.canCreateElement = false;
         let element = this.createElement(moveData); // Cambiar createElementFromData a this.createElement
+        element.start();
         this.gameObjects.push(element);
+        setTimeout(() => {
+            this.canCreateElement = true;
+        }, this.timeToCreateElement);
     }
 
     handleElementDestroyed(data) {
@@ -133,7 +128,8 @@ class Game extends EventTarger {
         this.updatedLives = false;
         let player = this.players.find(player => player.team === team);
         player.lives--;
-        this.dispatchEvent('lifeLost'); // Emitir evento de pérdida de vida
+        const event = new Event('lifeLost');
+        this.dispatchEvent(event); // Emitir evento de pérdida de vida
     }
     
     updateLives(players){
@@ -145,6 +141,13 @@ class Game extends EventTarger {
                 if(playerGO){
                     playerGO.changeImage(p.lives);
                 }
+                // Recorrer gameobjects y destruir los elementos
+                this.gameObjects.forEach(obj => {
+                    if (obj instanceof ElementGameObject)
+                    {
+                        obj.destroy();
+                    }
+                });
                 // SIN IMPLEMENTAR AUN
                 // actualizar textImageGameObject de las vidas restantes
                 // let textImageGameObject = this.gameObjects.find(obj => obj instanceof TextImageGameObject && obj.team === p.team);
@@ -172,7 +175,7 @@ class Game extends EventTarger {
     endGame(winner)
     {
         // Abrir un modal de fin de juego
-        this.dispatchEvent('gameEnded', winner);
+        this.dispatchEvent(new CustomEvent('gameEnded', { detail: winner }));
         this.pause(); // Pausar el juego
     }
 
@@ -188,7 +191,7 @@ class Game extends EventTarger {
             {
                 obj.changeImage(3);
             }
-            else if (obj instanceof Element)
+            else if (obj instanceof ElementGameObject)
             {
                 obj.destroy();
             }

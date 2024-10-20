@@ -11,6 +11,7 @@ class GifGameObject extends ImageGameObject {
 
     start() {
         super.start();
+        this.changeImageRatio = Math.floor(this.fps / this.images.length);
     }
 
     update() {
