@@ -49,7 +49,7 @@ function checkUsernameAndJoinLobby(event) {
 }
 
 function newGame() {
-    let lobbyId = 0;
+    let lobbyId = '';
     if (!createNewGame) {
         lobbyId = document.getElementById('lobbyId').value;
     }

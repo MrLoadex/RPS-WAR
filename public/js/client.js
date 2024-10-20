@@ -120,10 +120,12 @@ socket.on('elementDestroyed', (data) => {
 socket.on('gamePaused', (isPaused) => {
     if (isPaused) {
         console.log("Game paused!");
+        document.getElementById('gamePausedModal').style.display = 'block';
         game.pause();
     } else {
         console.log("Game resumed!");
         game.resume();
+        document.getElementById('gamePausedModal').style.display = 'none';
     }
 });
 
