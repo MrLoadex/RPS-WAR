@@ -2,9 +2,14 @@ const socket = io();
 
 let justCheckingUsername = false;
 let createLobby = false;
+let createNewGame = false;
 
 function checkUsername() {
     const username = document.getElementById('username').value;
+    if (!username) {
+        alert('Insert a username');
+        return;
+    }
     justCheckingUsername = true;
     document.getElementById('welcomeUser').innerText = document.getElementById('username').value;
     document.getElementById('lobbyOptions').style.display = 'block';
@@ -12,6 +17,7 @@ function checkUsername() {
 }
 
 function checkUsernameAndCreateLobby() {
+    createNewGame = true;
     const username = document.getElementById('username').value;
     createLobby = true;
     justCheckingUsername = false;
@@ -43,7 +49,10 @@ function checkUsernameAndJoinLobby(event) {
 }
 
 function newGame() {
-    const lobbyId = document.getElementById('lobbyId').value;
+    let lobbyId = 0;
+    if (!createNewGame) {
+        lobbyId = document.getElementById('lobbyId').value;
+    }
     const username = document.getElementById('username').value;
     window.location.href = `client.html?username=${encodeURIComponent(username)}&lobbyId=${encodeURIComponent(lobbyId)}`;
 }
