@@ -68,10 +68,10 @@ class Game extends EventTarget {
 
     update() {
         //Pause
-        // if (this.isPaused)
-        // {
-        //     return;
-        // }
+        if (this.isPaused)
+        {
+            return;
+        }
         // Dibujar todos los objetos
         this.gameObjects.forEach(obj => obj.draw());
         // Actualizar y dibujar todos los objetos del juego

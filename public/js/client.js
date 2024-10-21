@@ -120,17 +120,17 @@ socket.on('elementDestroyed', (data) => {
     );
 });
 
-// socket.on('gamePaused', (isPaused) => {
-//     if (isPaused) {
-//         console.log("Game paused!");
-//         document.getElementById('gamePausedModal').style.display = 'block';
-//         game.pause();
-//     } else {
-//         console.log("Game resumed!");
-//         game.resume();
-//         document.getElementById('gamePausedModal').style.display = 'none';
-//     }
-// });
+socket.on('gamePaused', (isPaused) => {
+    if (isPaused) {
+        console.log("Game paused!");
+        document.getElementById('gamePausedModal').style.display = 'block';
+        game.pause();
+    } else {
+        console.log("Game resumed!");
+        game.resume();
+        document.getElementById('gamePausedModal').style.display = 'none';
+    }
+});
 
 socket.on('playerLostLife', (players) => {
 
@@ -149,13 +149,13 @@ socket.on('resetGame', () => {
 });
 
 // REGION DE FUNCIONES
-// document.addEventListener('visibilitychange', function() {
-//     if (document.visibilityState === 'hidden') {
-//         socket.emit('gamePaused', true);
-//     } else {
-//         socket.emit('gamePaused', false);
-//     }
-// });
+document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') {
+        socket.emit('gamePaused', true);
+    } else {
+        socket.emit('gamePaused', false);
+    }
+});
 
 function login() {
     player.login(player.username);
