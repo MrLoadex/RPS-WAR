@@ -18,33 +18,33 @@ resizeCanvas();
 createGameButtons();
 window.addEventListener('resize', resizeCanvas);
 
-// Obtener el modal de fin de juego
-var gameLobbyModal = document.getElementById("gameLobbyModal");
-var gameLobbyModalContent = document.getElementById("gameLobbyModalContent");
+// // Obtener el modal de fin de juego
+// var gameLobbyModal = document.getElementById("gameLobbyModal");
+// var gameLobbyModalContent = document.getElementById("gameLobbyModalContent");
 
 
-// Obtener el botón que abre el modal de fin de juego
-var btn = document.getElementById("gameLobbyModalBtn");
+// // Obtener el botón que abre el modal de fin de juego
+// var btn = document.getElementById("gameLobbyModalBtn");
 
-// Obtener el elemento <span> que cierra el modal
-var span = document.getElementsByClassName("close")[0];
+// // Obtener el elemento <span> que cierra el modal
+// var span = document.getElementsByClassName("close")[0];
 
-// Cuando el usuario hace clic en el botón, abrir el modal
-btn.onclick = function() {
-  gameLobbyModal.style.display = "block";
-}
+// // Cuando el usuario hace clic en el botón, abrir el modal
+// btn.onclick = function() {
+//   gameLobbyModal.style.display = "block";
+// }
 
-// Cuando el usuario hace clic en <span> (x), cerrar el modal
-span.onclick = function() {
-  gameLobbyModal.style.display = "none";
-}
+// // Cuando el usuario hace clic en <span> (x), cerrar el modal
+// span.onclick = function() {
+//   gameLobbyModal.style.display = "none";
+// }
 
-// Cuando el usuario hace clic en cualquier lugar fuera del modal, cerrarlo
-window.onclick = function(event) {
-  if (event.target == gameLobbyModal) {
-    gameLobbyModal.style.display = "none";
-  }
-}
+// // Cuando el usuario hace clic en cualquier lugar fuera del modal, cerrarlo
+// window.onclick = function(event) {
+//   if (event.target == gameLobbyModal) {
+//     gameLobbyModal.style.display = "none";
+//   }
+// }
 
 // REGION DE EVENTOS INTERNOS DEL JUEGO
 game.addEventListener('lifeLost', () => {
@@ -52,13 +52,11 @@ game.addEventListener('lifeLost', () => {
 });
 
 game.addEventListener('gameEnded', (e) => {
-    const winner = e.detail;
-    if (winner) {
-        displayMessage(`El juego ha terminado. Has ganado.`, "gameEndModalContent");
-    } else {
-        displayMessage(`El juego ha terminado. Has perdido.`, "gameEndModalContent");
-    }
-    gameEndedModal.style.display = 'block';
+    const winnerUsername = e.detail; // This will now be the winner's username
+    // console.log("Game Ended Event: Winner is", winnerUsername);
+
+    // Show the winner's username in the modal
+    showGameEndModal(winnerUsername);
 });
 
 // REGION DE EVENTOS EXTERNOS DEL JUEGO
@@ -71,13 +69,13 @@ socket.on('lobbyCreated', (data) => {
     // Avisarle al jugador
     player.currentLobbyId = data.lobbyId;
     player.team = data.team;
-    displayMessage(`Lobby creado con ID: ${player.currentLobbyId}.`, "gameLobbyModalContent");
+    displayMessage(`Lobby created. ID: ${player.currentLobbyId}.`, "gameLobbyModalContent");
 });
 
 socket.on('playerJoined', (data) => {
     //Unir al player al lobby
     player.currentLobbyId = data.lobbyId;
-    displayMessage(`Te has unido al lobby: ${player.currentLobbyId}`, "gameLobbyModalContent");
+    displayMessage(`Joined lobby: ${player.currentLobbyId}`, "gameLobbyModalContent");
     data.players.forEach(p => {
         if (p.username === player.username) {
             player.team = p.team;
@@ -107,7 +105,7 @@ socket.on('lobbyError', (data) => {
 });
 
 socket.on('playerDisconnected', (data) => {
-    displayMessage(`Lobby: ${player.currentLobbyId} - Jugador ${data.playerId} se ha desconectado.`, "gameLobbyModalContent");
+    displayMessage(`Lobby: ${player.currentLobbyId} - Player ${data.playerId} has disconnected.`, "gameLobbyModalContent");
 });
 
 socket.on('elementDestroyed', (data) => {
@@ -142,6 +140,7 @@ socket.on('playerLostLife', (players) => {
         }
     }
 });
+
 
 socket.on('resetGame', () => {
     gameEndedModal.style.display = "none";
@@ -185,10 +184,10 @@ function update() {
     game.update(); // Delegar la actualización a la instancia de Game
 }
 
-function updateLives(){
+function updateLives() {
     let players = game.players;
-    // Solo emitira el evento el player right (para evitar que el evento se repita)
-    if (player.team ==='right'){
+    // Emit the event only for the player on the right (to avoid repeating the event)
+    if (player.team === 'right') {
         socket.emit("playerLostLife", players);
     }
 }
@@ -290,10 +289,22 @@ function createGameButtons() {
 // Function to open a modal with animation
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
+    
+    // Check if the modal exists
+    if (!modal) {
+        console.error(`Modal with ID "${modalId}" not found.`);
+        return; // Exit the function if modal is not found
+    }
+
     modal.style.display = 'block';
     setTimeout(() => {
-        modal.querySelector('.modal-content').style.opacity = '1';
-        modal.querySelector('.modal-content').style.transform = 'translateY(0)';
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) { // Check if modalContent exists
+            modalContent.style.opacity = '1';
+            modalContent.style.transform = 'translateY(0)';
+        } else {    
+            console.error(`Modal content not found in modal with ID "${modalId}".`);
+        }
     }, 10);
 }
 
@@ -328,8 +339,21 @@ window.onclick = function(event) {
 
 // Update other functions that show modals
 function showGameEndModal(winner) {
-    document.getElementById('gameEndModalContent').textContent = `The game has ended. ${winner} wins! Would you like to play again?`;
-    openModal('gameEndedModal');
+    var modalContent = document.getElementById('gameEndModalContent');
+    var modal = document.getElementById('gameEndedModal');
+
+    // console.log("Modal content element:", modalContent);
+    // console.log("Modal element:", modal);
+
+    if (modal && modalContent) { 
+        // Open the modal (don't assign the result to modal)
+        openModal('gameEndedModal');
+
+        // Update the modal content with the winner's information
+        modalContent.textContent = `${winner} has won! Would you like to play again?`;
+    } else {
+        console.error('Modal or modal content not found.');
+    }
 }
 
 function showPauseModal() {

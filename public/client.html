@@ -31,7 +31,7 @@
     <button id="gameLobbyModalBtn">Lobby Id</button>
 
     <!-- The Lobby Modal -->
-    <div id="gameLobbyModal" class="modal">
+    <div id="gameLobbyModal" class="modal" style="display: block;">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Game Lobby</h2>
@@ -49,12 +49,13 @@
     </div>
 
     <!-- The Game End Modal -->
-    <div id="gameEndedModal" class="modal">
+    <div id="gameEndedModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Game Over</h2>
-            <p id="gameEndModalContent">The game has ended. Would you like to play again?</p>
-            <button onclick="resetGame()">Play Again</button>
+            <p id="gameEndModalContent"></p>
+            <button id="playAgainBtn">Play Again</button>
+            <button id="noBtn">No</button> 
         </div>
     </div>
 
@@ -67,6 +68,7 @@
     <script src="./js/classes/Elements.js"></script>
     <script src="./js/classes/Player.js"></script>
     <script src="./js/classes/PlayerGameObject.js"></script>
+    <script src="./js/classes/TextGameObject.js"></script>
     <script src="./js/classes/Game.js"></script>
     <script src="/js/client.js"></script>
 </body>

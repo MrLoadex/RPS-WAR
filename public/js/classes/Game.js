@@ -128,17 +128,20 @@ class Game extends EventTarget {
         this.updatedLives = false;
         let player = this.players.find(player => player.team === team);
         player.lives--;
+        // Create a TextGameObject to display the message at the top center
+        const textObject = new TextGameObject("You lost one life!", context, canvas.width / 2, 60); // 30 pixels from the top
+        game.addGameObject(textObject, 1); // Add it to the game with a priority
         const event = new Event('lifeLost');
         this.dispatchEvent(event); // Emitir evento de pérdida de vida
     }
     
-    updateLives(players){
+    updateLives(players) {
         players.forEach(p => {
             let player = this.players.find(player => player.team === p.team);
-            if(player){
+            if (player) {
                 player.lives = p.lives;
                 let playerGO = this.gameObjects.find(obj => obj instanceof PlayerGameObject && obj.team === p.team);
-                if(playerGO){
+                if (playerGO) {
                     playerGO.changeImage(p.lives);
                 }
                 // Recorrer gameobjects y destruir los elementos
@@ -158,24 +161,23 @@ class Game extends EventTarget {
         this.verifyGameEnd();
     }
 
-    verifyGameEnd()
-    {
-        if (this.mainPlayer.lives <= 0)
-        {
+    verifyGameEnd() {
+        const losingPlayer = this.players.find(player => player.lives <= 0);
+        if (losingPlayer) {
+            const winningPlayer = this.players.find(player => player !== losingPlayer);
+            console.log(`${winningPlayer.username} wins!`);
+            this.endGame(winningPlayer); // Pass the winning player object
+        } else if (this.mainPlayer.lives <= 0) {
             console.log("Main player lost");
-            this.endGame(false);
-        }
-        else if (this.players.find(player => player.lives <= 0))
-        {
-            console.log("Other player lost");
-            this.endGame(true);
+            const otherPlayer = this.players.find(player => player !== this.mainPlayer);
+            this.endGame(otherPlayer); // Pass the other player object
         }
     }
 
     endGame(winner)
     {
         // Abrir un modal de fin de juego
-        this.dispatchEvent(new CustomEvent('gameEnded', { detail: winner }));
+        this.dispatchEvent(new CustomEvent('gameEnded', { detail: winner.username }));
         this.pause(); // Pausar el juego
     }
 

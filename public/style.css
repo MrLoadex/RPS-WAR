@@ -14,6 +14,8 @@
 
 /* Modal Content/Box */
 .modal-content {
+    position: relative;
+    z-index: 100;
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
@@ -23,6 +25,8 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     animation: slideDown 0.3s ease-in-out;
+    max-height: 80%; /* Prevents it from exceeding the viewport */
+    overflow-y: auto; /* Allows scrolling if content exceeds max height */
 }
 
 /* The Close Button */
@@ -54,18 +58,19 @@
 
 /* Button styles within modals */
 .modal-content button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    margin-top: 10px; /* Add some space above the buttons */
+    padding: 10px 20px; /* Add padding for better appearance */
+    font-size: 16px; /* Adjust font size */
+    cursor: pointer; /* Change cursor to pointer */
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth transition */
 }
 
 .modal-content button:hover {
-    background-color: #45a049;
+    background-color: #45a049; /* Darker green on hover */
 }
 
 /* Animations */
@@ -129,6 +134,23 @@ canvas {
     box-shadow: 0 6px #0077A7 !important;
 }
 
+#playAgainBtn, #noBtn {
+    display: block; /* or inline-block */
+    visibility: visible; /* Ensure they are visible */
+    margin-top: 10px; /* Space above buttons */
+    padding: 10px 20px; /* Add padding for better appearance */
+    font-size: 16px; /* Adjust font size */
+    cursor: pointer; /* Change cursor to pointer */
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+#playAgainBtn:hover, #noBtn:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
 #gameLobbyModalBtn:hover {
     background-color: #007B9A !important;
 }

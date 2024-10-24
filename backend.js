@@ -129,7 +129,6 @@ io.on('connection', (socket) => {
         socket.emit('usernameViability', isAvailable);
     });
 
-    // Add this inside the io.on('connection', (socket) => { ... }) block
     socket.on('checkLobbyId', (lobbyId, callback) => {
         const exists = !!lobbies[lobbyId]; // Check if the lobby exists
         callback(exists); // Send the result back to the client

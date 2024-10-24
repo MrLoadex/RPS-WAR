@@ -1,6 +1,8 @@
-mostrar vidas actuales del jugador 1/3 2/3 3/3 creando la clase TextGameObject
-mostrar texto en pantalla diciendo HAS PERDIDO UNA VIDA (misma clase)
-mover botones al canvas y agregarles estilo
-ampliar canvas a toda la pantalla
-renombrar clases a classes y solucionar errores provenientes
-estilizar botones y modales
+mostrar vidas actuales del jugador 1/3 2/3 3/3 creando la clase TextGameObject - in progress
+mostrar texto en pantalla diciendo HAS PERDIDO UNA VIDA (misma clase) - in progress
+mover botones al canvas y agregarles estilo - done
+ampliar canvas a toda la pantalla - done 
+renombrar clases a classes y solucionar errores provenientes - done
+estilizar botones y modales - done
+
+hacer que aparezcan los botones de reset en el gameEndedModal  -  - - -  -- - - - - - -- - me frustró 
