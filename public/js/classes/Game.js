@@ -9,7 +9,7 @@ class Game extends EventTarget {
         this.gameObjects = [];
         this.isPaused = false;
         this.updatedLives = true;
-        this.timeToCreateElement = 1000;
+        this.timeToCreateElement = 1500;
         this.canCreateElement = true;
     }
 
@@ -56,11 +56,11 @@ class Game extends EventTarget {
     createElement(data) {
         switch (data.type) {
             case 'Rock':
-                return new Rock(data.team, this.context, 50, 50, this.fps);
+                return new Rock(data.team, this.context, 75, 75, this.fps);
             case 'Paper':
-                return new Paper(data.team, this.context, 50, 50, this.fps);
+                return new Paper(data.team, this.context, 75, 75, this.fps);
             case 'Scissors':
-                return new Scissors(data.team, this.context, 50, 50, this.fps);
+                return new Scissors(data.team, this.context, 75, 75, this.fps);
             default:
                 return null;
         }
@@ -124,17 +124,28 @@ class Game extends EventTarget {
     }
     // jugador pierde vida 
     notifyLifeLoss(team) {
+        // Si el jugador no es el mainPlayer, no se notifica la pérdida de vida
+        if (team !== this.mainPlayer.team)
+        {
+            return;
+        }
         if (!this.updatedLives) return;
         this.updatedLives = false;
         let player = this.players.find(player => player.team === team);
         player.lives--;
+        console.log("player: ", player);
+        console.log("this.mainPlayer: ", this.mainPlayer);
+        
         // Create a TextGameObject to display the message at the top center
-        const textObject = new TextGameObject("You lost one life!", context, canvas.width / 2, 60); // 30 pixels from the top
-        game.addGameObject(textObject, 1); // Add it to the game with a priority
+        const textObject = new TextGameObject("YOU LOST A LIFE!", this.context, this.context.canvas.width / 2, 60); // 60 pixels from the top
+        const textObject2 = new TextGameObject(player.lives + "/3", this.context, this.context.canvas.width / 2, 120); // 120 pixels from the top
+        this.addGameObject(textObject, 1); // Add it to the game with a priority
+        this.addGameObject(textObject2, 1); // Add it to the game with a priority
+    
         const event = new Event('lifeLost');
         this.dispatchEvent(event); // Emitir evento de pérdida de vida
     }
-    
+
     updateLives(players) {
         players.forEach(p => {
             let player = this.players.find(player => player.team === p.team);
@@ -151,10 +162,6 @@ class Game extends EventTarget {
                         obj.destroy();
                     }
                 });
-                // SIN IMPLEMENTAR AUN
-                // actualizar textImageGameObject de las vidas restantes
-                // let textImageGameObject = this.gameObjects.find(obj => obj instanceof TextImageGameObject && obj.team === p.team);
-                // textImageGameObject.updateText(p.lives);
             }
             this.updatedLives = true; // resetea el flag de updatedLives
         });
@@ -211,8 +218,4 @@ class Game extends EventTarget {
         this.isPaused = false;
     }
 
-    updateCanvasSize(width, height){
-        this.context.canvas.width = width;
-        this.context.canvas.height = height;
-    }
 }

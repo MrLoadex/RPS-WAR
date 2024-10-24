@@ -13,38 +13,16 @@ const FPS = 30;
 const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
 
+// Configurar el tamaño del canvas para una resolución fija
+canvas.width = 1024;
+canvas.height = 920;
+canvas.style.position = 'absolute';
+canvas.style.top = '50%';
+canvas.style.left = '50%';
+canvas.style.transform = 'translate(-50%, -50%)';
+
 const game = new Game(player.currentLobbyId, player, [player], context, FPS);
-resizeCanvas();
-createGameButtons();
 window.addEventListener('resize', resizeCanvas);
-
-// // Obtener el modal de fin de juego
-// var gameLobbyModal = document.getElementById("gameLobbyModal");
-// var gameLobbyModalContent = document.getElementById("gameLobbyModalContent");
-
-
-// // Obtener el botón que abre el modal de fin de juego
-// var btn = document.getElementById("gameLobbyModalBtn");
-
-// // Obtener el elemento <span> que cierra el modal
-// var span = document.getElementsByClassName("close")[0];
-
-// // Cuando el usuario hace clic en el botón, abrir el modal
-// btn.onclick = function() {
-//   gameLobbyModal.style.display = "block";
-// }
-
-// // Cuando el usuario hace clic en <span> (x), cerrar el modal
-// span.onclick = function() {
-//   gameLobbyModal.style.display = "none";
-// }
-
-// // Cuando el usuario hace clic en cualquier lugar fuera del modal, cerrarlo
-// window.onclick = function(event) {
-//   if (event.target == gameLobbyModal) {
-//     gameLobbyModal.style.display = "none";
-//   }
-// }
 
 // REGION DE EVENTOS INTERNOS DEL JUEGO
 game.addEventListener('lifeLost', () => {
@@ -87,9 +65,7 @@ socket.on('startGame', (data) => {
     let backgroundImage = new Image();
     backgroundImage.src = './assets/background.png';
     // Ajustar el ancho y la altura para que ocupen todo el canvas
-    width = context.canvas.width;
-    height = context.canvas.height;
-    let background = new ImageGameObject(backgroundImage, context, width, height );
+    let background = new ImageGameObject(backgroundImage, context, canvas.width, canvas.height );
     game.addGameObject(background, 0);
     game.players = data.players;
     game.mainPlayer = player;
@@ -186,10 +162,8 @@ function update() {
 
 function updateLives() {
     let players = game.players;
-    // Emit the event only for the player on the right (to avoid repeating the event)
-    if (player.team === 'right') {
-        socket.emit("playerLostLife", players);
-    }
+
+    socket.emit("playerLostLife", players);
 }
 
 // Función para crear un elemento a partir de los datos recibidos
@@ -201,37 +175,15 @@ function resetGame() {
     socket.emit('resetGame');
 }
 
-// REGION DE INICIALIZACION 2
-socket.emit('login', player.username);
-if (lobbyId) {
-    joinLobby();
-} else {
-    createLobby();
-}
-
 // Function to resize the canvas
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    // Update game objects if necessary
-    if (game) {
-        game.updateCanvasSize(canvas.width, canvas.height);
-    }
-    
+
     // Remove existing game buttons
     document.querySelectorAll('button:not(#gameLobbyModalBtn)').forEach(button => button.remove());
     
     // Recreate game buttons with new positions
     createGameButtons();
 }
-
-// Initial canvas resize
-resizeCanvas();
-
-// Add event listener for window resize
-window.addEventListener('resize', resizeCanvas);
-
-setInterval(update, 1000 / FPS);
 
 // Add this function to create and style buttons
 function createButton(text, x, y, onClick) {
@@ -342,20 +294,43 @@ function showGameEndModal(winner) {
     var modalContent = document.getElementById('gameEndModalContent');
     var modal = document.getElementById('gameEndedModal');
 
-    // console.log("Modal content element:", modalContent);
-    // console.log("Modal element:", modal);
 
     if (modal && modalContent) { 
-        // Open the modal (don't assign the result to modal)
+        // Abrir el modal (no asignar el resultado a modal)
         openModal('gameEndedModal');
 
-        // Update the modal content with the winner's information
-        modalContent.textContent = `${winner} has won! Would you like to play again?`;
+        // Actualizar el contenido del modal con la información del ganador
+        modalContent.textContent = `${winner} ha ganado. ¿Quieres jugar de nuevo?`;
+        const playAgainBtn = document.createElement('button');
+        playAgainBtn.textContent = 'Play Again';
+        playAgainBtn.onclick = function() {
+            resetGame();
+            closeModal('gameEndedModal');
+        };
+        modalContent.appendChild(playAgainBtn);
     } else {
-        console.error('Modal or modal content not found.');
+        console.error('Modal o contenido del modal no encontrado.');
     }
 }
 
 function showPauseModal() {
     openModal('gamePausedModal');
 }
+
+// REGION DE INICIALIZACION 2
+socket.emit('login', player.username);
+if (lobbyId) {
+    joinLobby();
+} else {
+    createLobby();
+}
+
+
+// Initial canvas resize
+resizeCanvas();
+createGameButtons();
+
+// Add event listener for window resize
+window.addEventListener('resize', resizeCanvas);
+
+setInterval(update, 1000 / FPS);

@@ -6,7 +6,6 @@ class TextGameObject extends GameObject {
         this.y = y;
         this.fontSize = fontSize;
         this.color = color;
-        this.isVisible = true; // To control visibility
         this.lifetime = 2000; // Duration to display the text in milliseconds
         this.startTime = Date.now(); // Track when the text was created
     }
@@ -14,17 +13,15 @@ class TextGameObject extends GameObject {
     update() {
         // Hide the text after its lifetime
         if (Date.now() - this.startTime > this.lifetime) {
-            this.isVisible = false;
-            // console.log("Text is now invisible"); // Debug log
-    }
+            this.destroy();
+        }
 }
 
     draw() {
-        if (this.isVisible) {
-            this.context.font = `${this.fontSize}px Arial`;
-            this.context.fillStyle = this.color;
-            this.context.fillText(this.text, this.x, this.y);
-        }
+        this.context.font = `bold ${this.fontSize}px Arial`;
+        this.context.fillStyle = this.color;
+        this.context.textAlign = 'center';
+        this.context.fillText(this.text, this.x, this.y);
     }
 
     checkCollision() {

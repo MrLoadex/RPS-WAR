@@ -1,6 +1,7 @@
 class GameObject {
     constructor(context) {
         this.context = context;
+        this.isDestroyed = false;
     }
 
     start()
@@ -21,6 +22,11 @@ class GameObject {
     checkCollision()
     {
          throw new Error("checkCollision() debe ser implementado por las subclases");
+    }
+
+    destroy()
+    {
+        this.isDestroyed = true;
     }
    
 }

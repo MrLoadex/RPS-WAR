@@ -1,5 +1,5 @@
 class ElementGameObject extends GifGameObject {
-  constructor(team, context, height = 50, width = 50, images = [], fps = 30) {
+  constructor(team, context, height = 75, width = 75, images = [], fps = 30) {
     super(images[0], context, width, height, 0, 0, images, fps);
     this.team = team;
     this.speed = 2; // Velocidad de movimiento
