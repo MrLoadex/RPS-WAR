@@ -18,7 +18,7 @@ class TextGameObject extends GameObject {
 }
 
     draw() {
-        this.context.font = `bold ${this.fontSize}px Arial`;
+        this.context.font = `bold ${this.fontSize}px 'Courier New'`;
         this.context.fillStyle = this.color;
         this.context.textAlign = 'center';
         this.context.fillText(this.text, this.x, this.y);

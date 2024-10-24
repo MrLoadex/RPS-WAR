@@ -90,16 +90,26 @@ class Game extends EventTarget {
         this.gameObjects = this.gameObjects.filter(obj => !obj.isDestroyed);
     }
 
-    addMove(moveData) {
-        //esperar 1 segundo antes de crear un nuevo elemento
+    sendMove(strElement) {
         if (!this.canCreateElement) return;
         this.canCreateElement = false;
-        let element = this.createElement(moveData); // Cambiar createElementFromData a this.createElement
-        element.start();
-        this.gameObjects.push(element);
+        
+        let data = {
+            username: this.mainPlayer.username,
+            type: strElement,
+            team: this.mainPlayer.team,
+        };
+        socket.emit('playerMove', data);
+
         setTimeout(() => {
             this.canCreateElement = true;
         }, this.timeToCreateElement);
+    }
+
+    addMove(moveData) {
+        let element = this.createElement(moveData); 
+        element.start();
+        this.gameObjects.push(element);
     }
 
     handleElementDestroyed(data) {

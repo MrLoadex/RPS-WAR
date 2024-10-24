@@ -24,15 +24,6 @@ class Player {
         }
     }
 
-    sendMove(strElement) {
-        let data = {
-            username: this.username,
-            type: strElement,
-            team: this.team,
-        };
-        socket.emit('playerMove', data);
-    }
-
     disconnect() {
         socket.emit('disconnect');
     }

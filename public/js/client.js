@@ -14,7 +14,7 @@ const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
 
 // Configurar el tamaño del canvas para una resolución fija
-canvas.width = 1024;
+canvas.width = 1300;
 canvas.height = 920;
 canvas.style.position = 'absolute';
 canvas.style.top = '50%';
@@ -145,7 +145,7 @@ function joinLobby() {
 }
 
 function sendMove(strElement) {
-    player.sendMove(strElement);
+    game.sendMove(strElement);
 }
 
 function displayMessage(message, modal) {
@@ -328,7 +328,6 @@ if (lobbyId) {
 
 // Initial canvas resize
 resizeCanvas();
-createGameButtons();
 
 // Add event listener for window resize
 window.addEventListener('resize', resizeCanvas);
