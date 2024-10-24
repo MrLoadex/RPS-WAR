@@ -10,10 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cloudinary": "^2.5.1",
     "express": "^4.19.2",
     "socket.io": "^4.7.5",
     "websocket": "^1.0.35"
   },
-  "devDependencies": {},
   "description": ""
 }

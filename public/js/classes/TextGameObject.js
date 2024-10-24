@@ -15,10 +15,9 @@ class TextGameObject extends GameObject {
         if (Date.now() - this.startTime > this.lifetime) {
             this.destroy();
         }
-}
-
+    }
     draw() {
-        this.context.font = `bold ${this.fontSize}px 'Courier New'`;
+        this.context.font = `bold ${this.fontSize}px 'Monaco'`;
         this.context.fillStyle = this.color;
         this.context.textAlign = 'center';
         this.context.fillText(this.text, this.x, this.y);

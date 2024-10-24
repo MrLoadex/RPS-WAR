@@ -93,7 +93,7 @@ class Game extends EventTarget {
     sendMove(strElement) {
         if (!this.canCreateElement) return;
         this.canCreateElement = false;
-        
+
         let data = {
             username: this.mainPlayer.username,
             type: strElement,
@@ -143,8 +143,6 @@ class Game extends EventTarget {
         this.updatedLives = false;
         let player = this.players.find(player => player.team === team);
         player.lives--;
-        console.log("player: ", player);
-        console.log("this.mainPlayer: ", this.mainPlayer);
         
         // Create a TextGameObject to display the message at the top center
         const textObject = new TextGameObject("YOU LOST A LIFE!", this.context, this.context.canvas.width / 2, 60); // 60 pixels from the top
@@ -182,10 +180,8 @@ class Game extends EventTarget {
         const losingPlayer = this.players.find(player => player.lives <= 0);
         if (losingPlayer) {
             const winningPlayer = this.players.find(player => player !== losingPlayer);
-            console.log(`${winningPlayer.username} wins!`);
             this.endGame(winningPlayer); // Pass the winning player object
         } else if (this.mainPlayer.lives <= 0) {
-            console.log("Main player lost");
             const otherPlayer = this.players.find(player => player !== this.mainPlayer);
             this.endGame(otherPlayer); // Pass the other player object
         }
