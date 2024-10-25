@@ -303,8 +303,8 @@ function showGameEndModal(winner) {
         // Abrir el modal (no asignar el resultado a modal)
         openModal('gameEndedModal');
 
-        // Actualizar el contenido del modal con la información del ganador
-        modalContent.textContent = `${winner} ha ganado. ¿Quieres jugar de nuevo?`;
+        // Update the modal content with the winner's information
+        modalContent.textContent = `${winner} has won. Do you want to play again?`;
         const playAgainBtn = createButton('Play Again', 130, 100, 275, 50, '15px', () => {
             resetGame();
             closeModal('gameEndedModal');
