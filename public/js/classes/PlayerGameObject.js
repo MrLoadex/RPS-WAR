@@ -1,5 +1,5 @@
 class PlayerGameObject extends ImageGameObject {
-    constructor(team,images, context, gameInstance ,width= 50, height = 50, x = 0, y = 0) {
+    constructor(team,images, context, gameInstance ,width= 50, height = 75, x = 0, y = 0) {
         super(images.threeLives, context, width, height, x, y);
         this.team = team;
         this.images = images;

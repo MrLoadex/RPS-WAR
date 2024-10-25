@@ -5,24 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-        }
-        canvas {
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
@@ -57,7 +41,7 @@
         </div>
     </div>
 
-    <div id="messages"></div>
+    <img src="/assets/logo_ISFT_151.png" alt="Logo ISFT 151" id="logoISFT151" style="position: absolute; top: 0px; right: 15px; width: 10%;">
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/classes/GameObject.js"></script>

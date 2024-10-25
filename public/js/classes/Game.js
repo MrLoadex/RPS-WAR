@@ -28,6 +28,21 @@ class Game extends EventTarget {
         this.gameObjects.push(playerLGO);
         let playerRGO = this.createPlayerGameObject('right');
         this.gameObjects.push(playerRGO);
+        let livesTextPositionX = 100;
+        let livesTextPositionY = 120;
+        if (this.mainPlayer.team == 'left')
+        {
+            livesTextPositionX = 100;
+            livesTextPositionY = 100;
+        }
+        else
+        {
+            livesTextPositionX = this.context.canvas.width -100;
+            livesTextPositionY = 80;
+        }
+        let textLivesObject = new TextGameObject("3/3", this.context, livesTextPositionX, livesTextPositionY, 40, 'skyblue', false);
+        textLivesObject.name = "textLivesObject";
+        this.addGameObject(textLivesObject, 1);
     
     }
 
@@ -132,7 +147,7 @@ class Game extends EventTarget {
         this.gameObjects.push(gameObject);
         }
     }
-    // jugador pierde vida 
+
     notifyLifeLoss(team) {
         // Si el jugador no es el mainPlayer, no se notifica la pérdida de vida
         if (team !== this.mainPlayer.team)
@@ -145,13 +160,17 @@ class Game extends EventTarget {
         player.lives--;
         
         // Create a TextGameObject to display the message at the top center
-        const textObject = new TextGameObject("YOU LOST A LIFE!", this.context, this.context.canvas.width / 2, 60); // 60 pixels from the top
-        const textObject2 = new TextGameObject(player.lives + "/3", this.context, this.context.canvas.width / 2, 120); // 120 pixels from the top
-        this.addGameObject(textObject, 1); // Add it to the game with a priority
-        this.addGameObject(textObject2, 1); // Add it to the game with a priority
+        const textObject = new TextGameObject("YOU LOST A LIFE!", this.context, this.context.canvas.width / 2, 120);
+        this.addGameObject(textObject, 1);
+
+        const textLivesObject = this.gameObjects.find(obj => obj.name == "textLivesObject");
+        if (textLivesObject)
+        {
+            textLivesObject.text = player.lives + "/3";
+        }
     
         const event = new Event('lifeLost');
-        this.dispatchEvent(event); // Emitir evento de pérdida de vida
+        this.dispatchEvent(event);
     }
 
     updateLives(players) {

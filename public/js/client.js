@@ -14,8 +14,8 @@ const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
 
 // Configurar el tamaño del canvas para una resolución fija
-canvas.width = 1300;
-canvas.height = 920;
+canvas.width = 1080;
+canvas.height = 675;
 canvas.style.position = 'absolute';
 canvas.style.top = '50%';
 canvas.style.left = '50%';
@@ -31,9 +31,9 @@ game.addEventListener('lifeLost', () => {
 
 game.addEventListener('gameEnded', (e) => {
     const winnerUsername = e.detail; // This will now be the winner's username
-    // console.log("Game Ended Event: Winner is", winnerUsername);
-
     // Show the winner's username in the modal
+    // ocultar los botones
+    document.querySelectorAll('button:not(#gameLobbyModalBtn)').forEach(button => button.remove());
     showGameEndModal(winnerUsername);
 });
 
@@ -96,11 +96,9 @@ socket.on('elementDestroyed', (data) => {
 
 socket.on('gamePaused', (isPaused) => {
     if (isPaused) {
-        console.log("Game paused!");
         document.getElementById('gamePausedModal').style.display = 'block';
         game.pause();
     } else {
-        console.log("Game resumed!");
         game.resume();
         document.getElementById('gamePausedModal').style.display = 'none';
     }
@@ -120,6 +118,8 @@ socket.on('playerLostLife', (players) => {
 
 socket.on('resetGame', () => {
     gameEndedModal.style.display = "none";
+    //mostrar los botones
+    createGameButtons();
     game.resetGame();
 });
 
@@ -186,36 +186,40 @@ function resizeCanvas() {
 }
 
 // Add this function to create and style buttons
-function createButton(text, x, y, onClick) {
+function createButton(text, x, y, width, height, fontSize, onClick) {
     const button = document.createElement('button');
     button.textContent = text;
     button.className = 'game-button'; 
     button.style.position = 'absolute';
     button.style.left = `${x}px`;
     button.style.top = `${y}px`;
-    button.style.width = '150px'; 
-    button.style.height = '80px'; 
-    button.style.fontSize = '22px'; 
+    button.style.width = `${width}px`; 
+    button.style.height = `${height}px`; 
+    button.style.fontSize = fontSize; 
     button.style.color = '#fff';
-    button.style.backgroundColor = '#4CAF50';
+    button.style.backgroundColor = '#A0C4E1'; // Color celeste más gris
     button.style.border = 'none';
     button.style.borderRadius = '20px';
-    button.style.boxShadow = '0 12px #999'; 
+    button.style.boxShadow = '0 12px #333'; // Sombra más oscura
     button.style.transition = 'all 0.3s ease';
     button.style.cursor = 'pointer';
     button.style.outline = 'none';
     button.style.zIndex = '10';
+    button.style.textAlign = 'center'; // Centrar el texto
+    button.style.display = 'flex'; // Usar flexbox para centrar
+    button.style.alignItems = 'center'; // Centrar verticalmente
+    button.style.justifyContent = 'center'; // Centrar horizontalmente
 
-    button.onmouseover = () => button.style.backgroundColor = '#45a049';
-    button.onmouseout = () => button.style.backgroundColor = '#4CAF50';
+    button.onmouseover = () => button.style.backgroundColor = '#B0D4E8'; // Color celeste más claro
+    button.onmouseout = () => button.style.backgroundColor = '#A0C4E1'; // Color celeste más gris
     button.onmousedown = () => {
-        button.style.backgroundColor = '#3e8e41';
-        button.style.boxShadow = '0 6px #666';
+        button.style.backgroundColor = '#1E90FF'; // Color celeste oscuro
+        button.style.boxShadow = '0 6px #333'; // Sombra más oscura
         button.style.transform = 'translateY(6px)'; 
     };
     button.onmouseup = () => {
-        button.style.backgroundColor = '#45a049';
-        button.style.boxShadow = '0 12px #999';
+        button.style.backgroundColor = '#A0C4E1'; // Color celeste más gris
+        button.style.boxShadow = '0 12px #333'; // Sombra más oscura
         button.style.transform = 'translateY(0)';
     };
 
@@ -233,9 +237,9 @@ function createGameButtons() {
     const startX = (window.innerWidth - (buttonWidth * 3 + spacing * 2)) / 2;
     const startY = window.innerHeight - buttonHeight - 50; 
 
-    createButton('Rock', startX, startY, () => sendMove('Rock'));
-    createButton('Paper', startX + buttonWidth + spacing, startY, () => sendMove('Paper'));
-    createButton('Scissors', startX + (buttonWidth + spacing) * 2, startY, () => sendMove('Scissors'));
+    createButton('✊', startX, startY, buttonWidth, buttonHeight, '50px', () => sendMove('Rock'));
+    createButton('🖐', startX + buttonWidth + spacing, startY, buttonWidth, buttonHeight, '50px', () => sendMove('Paper'));
+    createButton('✌', startX + (buttonWidth + spacing) * 2, startY, buttonWidth, buttonHeight, '50px', () => sendMove('Scissors'));
 }
 
 // Function to open a modal with animation
@@ -301,15 +305,13 @@ function showGameEndModal(winner) {
 
         // Actualizar el contenido del modal con la información del ganador
         modalContent.textContent = `${winner} ha ganado. ¿Quieres jugar de nuevo?`;
-        const playAgainBtn = document.createElement('button');
-        playAgainBtn.textContent = 'Play Again';
-        playAgainBtn.onclick = function() {
+        const playAgainBtn = createButton('Play Again', 130, 100, 275, 50, '15px', () => {
             resetGame();
             closeModal('gameEndedModal');
-        };
+        });
         modalContent.appendChild(playAgainBtn);
     } else {
-        console.error('Modal o contenido del modal no encontrado.');
+        console.error('Modal or modal content not found.');
     }
 }
 
@@ -325,10 +327,8 @@ if (lobbyId) {
     createLobby();
 }
 
-
 // Initial canvas resize
 resizeCanvas();
-
 // Add event listener for window resize
 window.addEventListener('resize', resizeCanvas);
 

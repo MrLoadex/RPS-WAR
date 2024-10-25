@@ -25,7 +25,8 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     animation: slideDown 0.3s ease-in-out;
-    max-height: 80%; /* Prevents it from exceeding the viewport */
+    height: 80%;
+    max-height: 140px; /* Prevents it from exceeding the viewport */
     overflow-y: auto; /* Allows scrolling if content exceeds max height */
 }
 
@@ -194,4 +195,12 @@ canvas {
     background-color: #3e8e41;
     box-shadow: 0 6px #666;
     transform: translateY(6px);
+}
+
+/* Estilos adicionales para los modales y botones */
+.modal-content {
+    font-family: 'Press Start 2P', sans-serif; /* Aplicar el estilo Press Start 2P a los modales */
+}
+button {
+    font-family: 'Press Start 2P', sans-serif; /* Aplicar el estilo Press Start 2P a los botones */
 }
