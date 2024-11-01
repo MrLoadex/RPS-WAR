@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RPS - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/GameModel.js"></script>
+    <script src="/js/GameView.js"></script>
+    <script src="/js/GameLoginView.js"></script>
+    <script src="/js/GameMainView.js"></script>
+    <script src="/js/GameController.js"></script>
+    <script src="/js/Application.js"></script>
     <style>
         body {
             font-family: 'Press Start 2P', sans-serif; /* Cambio de fuente para todo el cuerpo */
@@ -65,32 +72,15 @@
     </style>
 </head>
 <body>
-    <h1>ROCK PAPER SCISSORS WAR</h1>
+    <script>
+        function main()
+        {
+            let game = new Application();
+            game.init();
+            game.start();
+        }
 
-    <!-- Username Input -->
-    <input type="text" id="username" placeholder="Type your username">
-    <button onclick="checkUsername()">🔁 Verify User</button>
-
-    <!-- Lobby Options (hidden initially) -->
-    <div id="lobbyOptions">
-        <h2>¡Welcome, <span id="welcomeUser"></span>!</h2>
-        <button onclick="checkUsernameAndCreateLobby()">Create Lobby</button><br>
-        <input type="text" id="lobbyId" placeholder="Lobby ID">
-        <button onclick="checkUsernameAndJoinLobby()">Join</button>
-    </div>
-
-    <div id="messages"></div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/index.js"></script>
-
-    <!-- Sección de los fundadores -->
-    <div class="founders">
-        <h2>Developers</h2>
-        <ul>
-            <li>Acuña Aldana</li>
-            <li>Torres Martin</li>
-            <li>Nuñez Julian</li>
-        </ul>
-    </div>
+        window.onload = main;
+    </script>
 </body>
 </html>

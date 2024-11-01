@@ -126,7 +126,7 @@ io.on('connection', (socket) => {
     // Escuchar evento checkUsername con el parámetro username
     socket.on('checkUsername', (username) => {
         const isAvailable = !Object.values(users).some(user => user.username === username);
-        socket.emit('usernameViability', isAvailable);
+        socket.emit('usernameViability', isAvailable); // Aqui se deberia enviar el username y el isAvailable, pero alta paja
     });
 
     socket.on('checkLobbyId', (lobbyId, callback) => {

@@ -1,3 +1,71 @@
+/* Estilos generales */
+body {
+    font-family: 'Press Start 2P', sans-serif; /* Cambio de fuente para todo el cuerpo */
+    text-align: center;
+    margin-top: 50px;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+}
+
+input, button {
+    padding: 10px;
+    margin: 10px;
+    font-size: 14px; /* Reducción del tamaño del texto para los inputs y botones */
+    width: 250px; 
+    font-family: 'Press Start 2P', sans-serif; /* Cambio de fuente para los inputs y botones */
+}
+
+#lobbyOptions {
+    display: none; /* Oculto inicialmente */
+}
+
+button {
+    background-color: #4CAF50;
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+}
+
+button:hover {
+    background-color: #45a049; 
+}
+
+h1 {
+    color: white; 
+    font-family: 'Press Start 2P', sans-serif; /* Cambio de fuente para el título */
+    text-shadow: 1px 1px 2px #000; /* Añadir sombra de texto gris */
+}
+
+#lobbyOptions h2 {
+    color: white; 
+    font-family: 'Press Start 2P', sans-serif; /* Cambio de fuente para el título del lobby */
+    text-shadow: 1px 1px 2px #000; /* Añadir sombra de texto gris */
+}
+
+/* Estilos para los fundadores */
+.founders {
+    margin-top: 50px;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    font-family: 'Press Start 2P', sans-serif; /* Cambio de fuente para los fundadores */
+    text-shadow: 1px 1px 2px #000; /* Añadir sombra de texto gris */
+}
+
+.founders h2 {
+    margin-bottom: 20px;
+}
+
+.founders ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.founders ul li {
+    margin-bottom: 10px;
+}
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
