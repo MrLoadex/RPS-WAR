@@ -5,6 +5,10 @@ class GameModel extends EventTarget
 		super();
 		this.socket = io();
         this.init();
+        this.username = '';
+        this.lobbyId = '';
+        this.isCheckingUsername = false;
+        this.isCreatingLobby = false;
 	}
 
     init()
@@ -30,7 +34,17 @@ class GameModel extends EventTarget
 		});
 
 		this.socket.on('usernameViability', (viability) => {
-			this.dispatchEvent(new CustomEvent('usernameViability', { detail: { viability } }));
+            console.log(this.isCheckingUsername, this.isCreatingLobby);
+            if (this.isCheckingUsername) {
+                this.dispatchEvent(new CustomEvent('usernameViability', { detail: { viability } }));
+            }
+            else if (this.isCreatingLobby) {
+                window.location.href = `client.html?username=${encodeURIComponent(this.username)}`;
+            }
+            else
+            {
+                window.location.href = `client.html?username=${encodeURIComponent(this.username)}&lobbyId=${encodeURIComponent(this.lobbyId)}`;
+            }
 		});
 
 		this.socket.on('lobbyIdExists', (exists) => {
@@ -43,16 +57,22 @@ class GameModel extends EventTarget
 	}
 
 	checkUsername(username) {
+		this.username = username;
+		this.isCheckingUsername = true;
 		this.socket.emit('checkUsername', username);
 	}
 
 	checkUsernameAndCreateLobby(username) {
-		this.checkUsername(username);
+        this.checkUsername(username);
+        this.isCheckingUsername = false;    
+        this.isCreatingLobby = true;
 	}
 
-	checkUsernameAndJoinLobby(username, lobbyId) {
-		this.checkUsername(username);
-		this.socket.emit('checkLobbyId', lobbyId);
+	checkUsernameAndJoinLobby(lobbyId, username) {
+        this.lobbyId = lobbyId;
+        this.checkUsername(username);
+        this.isCheckingUsername = false;  
+        this.isCreatingLobby = false;
 	}
 
 	playerMove(moveData) {

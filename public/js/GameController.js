@@ -42,7 +42,6 @@ class GameController extends EventTarget
 
 	onCreateLobby(event) {
 		const username = event.detail.username;
-		console.log('Creando lobby:', username);
 		// Avisar al modelo que el usuario ha creado un lobby
 		this.model.checkUsernameAndCreateLobby(username);
 	}
@@ -50,7 +49,6 @@ class GameController extends EventTarget
 	onJoinLobby(event) {
 		const username = event.detail.username;
 		const lobbyId = event.detail.lobbyId;
-		console.log('Uniendo al lobby:', username, lobbyId);
 		// Avisar al modelo que el usuario ha unido a un lobby
 		this.model.checkUsernameAndJoinLobby(lobbyId, username);
 	}
