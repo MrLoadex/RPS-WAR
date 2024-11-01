@@ -1,37 +1,84 @@
 class GameLoginView extends HTMLElement {
     constructor() {
         super();
+        // Crear el título principal
+        this.titulo = document.createElement('h1');
+        this.titulo.textContent = 'ROCK PAPER SCISSORS WAR';
+        this.appendChild(this.titulo);
+        
+        // Input de Nombre de Usuario
+        this.inputUsername = document.createElement('input');
+        this.inputUsername.type = 'text';
+        this.inputUsername.id = 'username';
+        this.inputUsername.placeholder = 'Type your username';
+        this.appendChild(this.inputUsername);
+    
+        this.botonVerificar = document.createElement('button');
+        this.botonVerificar.id = 'verifyUserBtn';
+        this.botonVerificar.textContent = '🔁 Verify User';
+        this.appendChild(this.botonVerificar);
+    
+        // Opciones del Lobby (ocultas inicialmente)
+        this.opcionesLobby = document.createElement('div');
+        this.opcionesLobby.id = 'lobbyOptions';
+        this.opcionesLobby.style.display = 'none';
+    
+        this.bienvenida = document.createElement('h2');
+        this.bienvenida.innerHTML = '¡Welcome, ';
+        this.usuarioBienvenida = document.createElement('span');
+        this.usuarioBienvenida.id = 'welcomeUser';
+        this.bienvenida.appendChild(this.usuarioBienvenida);
+        this.bienvenida.appendChild(document.createTextNode('!'));
+        this.opcionesLobby.appendChild(this.bienvenida);
+    
+        this.botonCrearLobby = document.createElement('button');
+        this.botonCrearLobby.id = 'createLobbyBtn';
+        this.botonCrearLobby.textContent = 'Create Lobby';
+        this.opcionesLobby.appendChild(this.botonCrearLobby);
+    
+        this.saltoLinea = document.createElement('br');
+        this.opcionesLobby.appendChild(this.saltoLinea);
+    
+        this.inputLobbyId = document.createElement('input');
+        this.inputLobbyId.type = 'text';
+        this.inputLobbyId.id = 'lobbyId';
+        this.inputLobbyId.placeholder = 'Lobby ID';
+        this.opcionesLobby.appendChild(this.inputLobbyId);
+    
+        this.botonUnirseLobby = document.createElement('button');
+        this.botonUnirseLobby.id = 'joinLobbyBtn';
+        this.botonUnirseLobby.textContent = 'Join';
+        this.opcionesLobby.appendChild(this.botonUnirseLobby);
+    
+        this.appendChild(this.opcionesLobby);
+    
+        this.divMensajes = document.createElement('div');
+        this.divMensajes.id = 'messages';
+        this.appendChild(this.divMensajes);
+    
+        // Sección de los fundadores
+        this.seccionFundadores = document.createElement('div');
+        this.seccionFundadores.className = 'founders';
+    
+        this.tituloFundadores = document.createElement('h2');
+        this.tituloFundadores.textContent = 'Developers';
+        this.seccionFundadores.appendChild(this.tituloFundadores);
+    
+        this.listaFundadores = document.createElement('ul');
+    
+        this.fundadores = ['Acuña Aldana', 'Torres Martin', 'Nuñez Julian'];
+        this.fundadores.forEach(nombre => {
+            const elementoLista = document.createElement('li');
+            elementoLista.textContent = nombre;
+            this.listaFundadores.appendChild(elementoLista);
+        });
+    
+        this.seccionFundadores.appendChild(this.listaFundadores);
+        this.appendChild(this.seccionFundadores);
+        this.style.display = 'none';
     }
 
     connectedCallback() {
-        this.innerHTML = `
-            <h1>ROCK PAPER SCISSORS WAR</h1>
-            
-            <!-- Input de Nombre de Usuario -->
-            <input type="text" id="username" placeholder="Type your username">
-            <button id="verifyUserBtn">🔁 Verify User</button>
-            
-            <!-- Opciones del Lobby (ocultas inicialmente) -->
-            <div id="lobbyOptions" style="display: none;">
-                <h2>¡Welcome, <span id="welcomeUser"></span>!</h2>
-                <button id="createLobbyBtn">Create Lobby</button><br>
-                <input type="text" id="lobbyId" placeholder="Lobby ID">
-                <button id="joinLobbyBtn">Join</button>
-            </div>
-            
-            <div id="messages"></div>
-            
-            <!-- Sección de los fundadores -->
-            <div class="founders">
-                <h2>Developers</h2>
-                <ul>
-                    <li>Acuña Aldana</li>
-                    <li>Torres Martin</li>
-                    <li>Nuñez Julian</li>
-                </ul>
-            </div>
-        `;
-        this.style.display = 'none';
 
         // Asignar el manejador de eventos
         this.querySelector('#verifyUserBtn').onclick = () => this.checkUsername();
@@ -39,7 +86,6 @@ class GameLoginView extends HTMLElement {
         this.querySelector('#joinLobbyBtn').onclick = () => this.checkUsernameAndJoinLobby();
 
     }
-
 
     setView() {
         this.style.display = 'block';
@@ -86,3 +132,5 @@ class GameLoginView extends HTMLElement {
 
 // Registrar el elemento personalizado 'game-login-view'
 customElements.define('game-login-view', GameLoginView);
+
+export default GameLoginView;

@@ -1,3 +1,5 @@
+
+//<script src="/socket.io/socket.io.js"></script>
 class GameModel extends EventTarget
 {
 	constructor()
@@ -34,7 +36,6 @@ class GameModel extends EventTarget
 		});
 
 		this.socket.on('usernameViability', (viability) => {
-            console.log(this.isCheckingUsername, this.isCreatingLobby);
             if (this.isCheckingUsername) {
                 this.dispatchEvent(new CustomEvent('usernameViability', { detail: { viability } }));
             }
@@ -80,3 +81,6 @@ class GameModel extends EventTarget
 	}
 
 };
+
+export default GameModel;
+

@@ -6,12 +6,7 @@
     <title>RPS - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/GameModel.js"></script>
-    <script src="/js/GameView.js"></script>
-    <script src="/js/GameLoginView.js"></script>
-    <script src="/js/GameMainView.js"></script>
-    <script src="/js/GameController.js"></script>
-    <script src="/js/Application.js"></script>
+    <script src="/js/main.js" type="module"></script>
     <style>
         body {
             font-family: 'Press Start 2P', sans-serif; /* Cambio de fuente para todo el cuerpo */
@@ -72,15 +67,5 @@
     </style>
 </head>
 <body>
-    <script>
-        function main()
-        {
-            let game = new Application();
-            game.init();
-            game.start();
-        }
-
-        window.onload = main;
-    </script>
 </body>
 </html>

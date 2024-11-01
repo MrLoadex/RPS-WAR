@@ -20,3 +20,5 @@ class GameMainView extends HTMLElement
 
 // Registrar el elemento personalizado 'game-main-view'
 customElements.define('game-main-view', GameMainView);
+
+export default GameMainView;

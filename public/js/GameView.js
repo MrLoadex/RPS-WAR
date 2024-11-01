@@ -1,10 +1,13 @@
+import GameLoginView from "./GameLoginView.js";
+import GameMainView from "./GameMainView.js";
+
 class GameView extends HTMLElement
 {
 	constructor()
 	{
 		super();
-		this.gameLoginView = document.createElement('game-login-view');
-		this.gameMainView = document.createElement('game-main-view');
+		this.gameLoginView = new GameLoginView();
+		this.gameMainView = new GameMainView();
 
 		// Colección de vistas
 		this.views = new Map();
@@ -48,3 +51,6 @@ class GameView extends HTMLElement
 
 // Registrar el elemento personalizado 'game-view'
 customElements.define('game-view', GameView);
+
+export default GameView;
+

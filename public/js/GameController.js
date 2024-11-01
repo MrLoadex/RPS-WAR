@@ -1,3 +1,5 @@
+
+
 class GameController extends EventTarget
 {
 	constructor(model, view)
@@ -33,7 +35,6 @@ class GameController extends EventTarget
 	}
 
     //Eventos de las vistas
-
 	onVerifyUser(event) {
 		const username = event.detail.username;
 		// Avisar al modelo que el usuario ha sido verificado
@@ -53,9 +54,7 @@ class GameController extends EventTarget
 		this.model.checkUsernameAndJoinLobby(lobbyId, username);
 	}
 
-
     //Eventos del modelo
-
     onUsernameViability(event) {
         const viability = event.detail.viability;
         if (!viability) {
@@ -75,3 +74,6 @@ class GameController extends EventTarget
 		this.view.notify('loggingError');
 	}
 };
+
+export default GameController;
+

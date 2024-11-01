@@ -1,13 +1,17 @@
+import GameModel from "./GameModel.js";
+import GameView from "./GameView.js";
+
+import GameController from "./GameController.js";
+
+
 class Application
 {
 	constructor()
 	{
 		this.model = new GameModel();
-		this.view = document.createElement('game-view');
+		this.view = new GameView();
 		document.body.appendChild(this.view);
 		this.controller = new GameController( this.model, this.view );
-		
-		
 	};
 	
 	init()
@@ -32,3 +36,6 @@ class Application
 	
 	
 };
+
+export default Application;
+
