@@ -6,6 +6,7 @@ class GameView extends HTMLElement
 	constructor()
 	{
 		super();
+		this.name = 'game-view';
 		this.gameLoginView = new GameLoginView();
 		this.gameMainView = new GameMainView();
 

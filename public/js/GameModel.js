@@ -41,11 +41,13 @@ class GameModel extends EventTarget
             }
             else if (this.isCreatingLobby) {
                 window.location.href = `client.html?username=${encodeURIComponent(this.username)}`;
+				// this.dispatchEvent(new CustomEvent('joinLobby', { detail: { username: this.username } }));
             }
             else
             {
                 window.location.href = `client.html?username=${encodeURIComponent(this.username)}&lobbyId=${encodeURIComponent(this.lobbyId)}`;
-            }
+				// this.dispatchEvent(new CustomEvent('createLobby', { detail: { username: this.username, lobbyId: this.lobbyId } }));
+			}
 		});
 
 		this.socket.on('lobbyIdExists', (exists) => {

@@ -102,7 +102,7 @@ class GameLoginView extends HTMLElement {
     checkUsernameAndCreateLobby() {
         const username = this.querySelector('#username').value;
         // Despachar un evento personalizado
-        const event = new CustomEvent('createLobby', { detail: { username } });
+        const event = new CustomEvent('requestCreateLobby', { detail: { username } });
         this.dispatchEvent(event);
     }
 
@@ -110,7 +110,7 @@ class GameLoginView extends HTMLElement {
         const username = this.querySelector('#username').value;
         const lobbyId = this.querySelector('#lobbyId').value;
         // Despachar un evento personalizado
-        const event = new CustomEvent('joinLobby', { detail: { username, lobbyId } });
+        const event = new CustomEvent('requestJoinLobby', { detail: { username, lobbyId } });
         this.dispatchEvent(event);
     }
 
