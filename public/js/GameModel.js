@@ -35,8 +35,12 @@ class GameModel extends EventTarget
 			this.dispatchEvent(new CustomEvent('startGame', { detail: data }));
 		});
 
-		this.socket.on('usernameViability', (viability) => {
-            if (this.isCheckingUsername) {
+		this.socket.on('usernameViability', (viability, username) => {
+            if(username !== this.username) 
+			{
+                return;
+            }
+			if (this.isCheckingUsername) {
                 this.dispatchEvent(new CustomEvent('usernameViability', { detail: { viability } }));
             }
             else if (this.isCreatingLobby) {
