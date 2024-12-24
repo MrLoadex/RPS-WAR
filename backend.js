@@ -126,6 +126,7 @@ io.on('connection', (socket) => {
     // Escuchar evento checkUsername con el parámetro username
     socket.on('checkUsername', (username) => {
         const isAvailable = !Object.values(users).some(user => user.username === username);
+        console.log(socket.id);
         socket.emit('usernameViability', isAvailable, username);
     });
 

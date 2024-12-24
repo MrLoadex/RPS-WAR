@@ -36,8 +36,9 @@ class GameModel extends EventTarget
 		});
 
 		this.socket.on('usernameViability', (viability, username) => {
-            if(username !== this.username) 
+			if(username !== this.username) 
 			{
+				console.log('usernameViability', username, viability);
                 return;
             }
 			if (this.isCheckingUsername) {
