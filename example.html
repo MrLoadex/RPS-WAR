@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<title>untitled</title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+</head>
+
+<body>
+	
+</body>
+
+<script>
+
+class GameModel extends EventTarget
+{
+	constructor()
+	{
+		super();
+		//this.ws = new WebSocket();
+		
+		//this.playerOne
+		//this.playerTwo
+	}
+	
+	init()
+	{
+		
+	}
+	
+	login(data)
+	{
+			//si es satisfactorio, despachará un evento.
+			this.dispatchEvent('userLogged');
+			
+			//Si no es satisfactorio
+			this.dispatchEvent('loggingError');
+	}
+};
+
+class GameController
+{
+	constructor(model, view)
+	{
+		super();
+		this.model = model;
+		this.view = view;
+	}
+	
+	
+	init()
+	{
+		//Establecer las asociaciones de los eventos tanto de la vista como del modelo y sus correspondientes respuestas.
+		//Las respuestas a los eventos son los métodos del controlador (y todos, arranca como onNombreDelEvento)
+		this.model.addEventListener('userLogged', onUserLogged );
+		this.view.addEventListener('customViewEvent...', handler );
+		
+		//Asumamos que la primera vista (es la de login)
+		this.view.setView('login');
+		
+		
+		//Un instante antes de comenzar el loop
+		//Se deja estable el primer frame.
+		
+		
+		
+	}
+	
+	onUserLoginRequest()
+	{
+		this.model.login( .. )
+	}
+	
+	onUserLogged()
+	{
+		this.view.setView('game');
+	}
+	
+	onUserLoggingError()
+	{
+		this.view.notify('loggingError');
+	}
+	
+	
+};
+
+class GameLoginView
+{
+//Se va a encargar de mostrar la pantalla de login	
+}
+
+class GameMainView
+{
+//Contiene el canvas	
+}
+
+class GameView extends HTMLElement
+{
+	constructor()
+	{
+		super();
+		//Carga de los recursos (imagenes)
+		this.gameLoginView = new GameLoginView();
+		this.gameMainView = new GameMainView();
+		
+		//Collection of view
+		this.views = new Map();
+		this.views.set('login', this.gameLoginView );
+		this.views.set('game', this.gameMainView );
+	}
+	
+	init()
+	{
+		
+	}
+	
+	update()
+	{
+		//Va a interar sobre toda la colección de objetos dibujables/renderizables/actualizables
+	}
+	
+	setView(id)
+	{
+		//Obtengo la instancia del mapa interno de vistas.. y la pongo en pantalla
+		//ej: 
+		 //let current = this.views.get(id)
+		 //current.init();
+		//document.body.appendChild(current );
+		
+	}
+	
+	notify(data)
+	{
+		//alert(data)
+		//launch modal view
+	}
+};
+
+class Application
+{
+	constructor()
+	{
+		this.model = new GameModel();
+		this.view = new GameView();
+		this.controller = new GameController( this.model, this.view );
+		
+		
+	};
+	
+	init()
+	{
+		
+	}
+	
+	start()
+	{
+		this.controller.init();
+	}
+	
+	pause()
+	{
+		
+	}
+	
+	quit()
+	{
+		
+	}
+	
+	
+};
+
+
+function main()
+{
+	let game = new Application();
+	game.init();
+	game.start();
+}
+
+window.onload = main;
+
+</script>
+
+</html>
+
